@@ -6,7 +6,7 @@
 #    By: dhorvill <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/16 17:26:10 by dhorvill          #+#    #+#              #
-#    Updated: 2019/11/16 23:08:53 by dhorvill         ###   ########.fr        #
+#    Updated: 2019/11/30 22:10:27 by dhorvill         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME = miniRT
 
 LIBFT = libft.a
 
-SRCS = minirt.c setup_win.c sphere_ops.c bounding_box_ops.c
+SRCS = minirt.c setup_win.c sphere_ops.c vector_ops.c raytrace.c
 
 OBJ = $(SRC=.c:.o)
 

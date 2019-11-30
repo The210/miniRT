@@ -6,7 +6,7 @@
 /*   By: dhorvill <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/24 18:36:49 by dhorvill          #+#    #+#             */
-/*   Updated: 2019/11/24 18:39:17 by dhorvill         ###   ########.fr       */
+/*   Updated: 2019/11/30 18:47:24 by dhorvill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,11 @@
 float	norm(t_point vector)
 {
 	return (sqrt(pow(vector.x, 2) + pow(vector.y, 2) + pow(vector.z, 2)));
+}
+
+float	normsqrd(t_point vector)
+{
+	return (pow(vector.x, 2) + pow(vector.y, 2) + pow(vector.z, 2));
 }
 
 t_point normalize(t_point vector)
@@ -28,6 +33,15 @@ t_point normalize(t_point vector)
 	return (vector);
 }
 
+t_vect	square(t_vect v1)
+{
+	t_point result;
+
+	result.x = v1.x * v1.x;
+	result.y = v1.y * v1.y;
+	result.z = v1.z * v1.z;
+	return (result);
+}
 
 t_point	vector(t_point v1, t_point v2)
 {
@@ -37,10 +51,29 @@ t_point	vector(t_point v1, t_point v2)
 	result.y = v2.y - v1.y;
 	result.z = v2.z - v1.z;
 	return (normalize(result));
-
 }
 
-float	scalar_product(t_point v1, t_point v2)
+t_vect	substract(t_vect v1, t_vect v2)
+{
+	t_vect result;
+
+	result.x = v2.x - v1.x;
+	result.y = v2.y - v1.y;
+	result.z = v2.z - v1.z;
+	return (result);
+}
+
+t_vect	add(t_vect v1, t_vect v2)
+{
+	t_vect result;
+
+	result.x = v2.x + v1.x;
+	result.y = v2.y + v1.y;
+	result.z = v2.z + v1.z;
+	return (result);
+}
+
+float	dot(t_point v1, t_point v2)
 {
 	return (v1.x * v2.x + v1.y * v2.y + v1.z * v2.z);
 }
