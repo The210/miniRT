@@ -16,8 +16,8 @@
 int	interact(int keycode, void *thing)
 {
 	thing = 0;
-	ft_putnbr(keycode);
-	ft_putchar('\n');
+	ft_putnbr_fd(keycode, 1);
+	ft_putchar_fd('\n', 1);
 	if (keycode == 53)
 		exit(0);
 	return (0);

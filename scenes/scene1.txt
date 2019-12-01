@@ -1,0 +1,7 @@
+# OBJECTS
+# When a value is not applicable for the type of figure use `NA`
+
+
+#   type       center.x    center.y    center.z     radius
+    
+    Sphere     0           0           10           3
