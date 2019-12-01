@@ -6,7 +6,7 @@
 /*   By: dhorvill <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/24 18:36:49 by dhorvill          #+#    #+#             */
-/*   Updated: 2019/11/30 18:47:24 by dhorvill         ###   ########.fr       */
+/*   Updated: 2019/12/01 20:23:15 by dhorvill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,16 @@ t_vect	add(t_vect v1, t_vect v2)
 	result.x = v2.x + v1.x;
 	result.y = v2.y + v1.y;
 	result.z = v2.z + v1.z;
+	return (result);
+}
+
+t_vect	scale(t_vect v, float scalar)
+{
+	t_vect result;
+	
+	result.x = v.x * scalar;
+	result.y = v.y * scalar;
+	result.z = v.z * scalar;
 	return (result);
 }
 

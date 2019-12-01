@@ -7,9 +7,10 @@
 # include <fcntl.h>
 # include <stdio.h>
 
-# define WIN_HEIGHT 800
-# define WIN_WIDTH 800
+# define WIN_HEIGHT 1000
+# define WIN_WIDTH 1000
 # define RENDER_DISTANCE 100000000
+# define AMBIENCE_LIGHTING 0.15
 # define FOV_H M_PI / 2
 # define FOV_W M_PI / 2
 
@@ -87,5 +88,7 @@ float		dot(t_point v1, t_point v2);
 float		distance(t_point p1, t_point p2);
 void		render_frame(t_vect **ray_table, t_figure *figures);
 t_vect		**init_tracer();
+int			sphere_eclipses_light(t_point intersection, t_sphere, t_point spot);
+t_vect		scale(t_vect v, float scalar);
 
 #endif

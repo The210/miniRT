@@ -6,7 +6,7 @@
 /*   By: dhorvill <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/30 19:15:30 by dhorvill          #+#    #+#             */
-/*   Updated: 2019/12/01 19:38:17 by dhorvill         ###   ########.fr       */
+/*   Updated: 2019/12/01 21:32:59 by dhorvill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ int		color_shade(float intensity, int color)
 	int	green;
 	int	blue;
 	
+	intensity = intensity < AMBIENCE_LIGHTING ? AMBIENCE_LIGHTING : intensity;
 	red = color >> 16;
 	green = (color & 0xff00) >> 8;
 	blue = color & 0xff;
@@ -71,7 +72,7 @@ int		color_shade(float intensity, int color)
 	return (result);
 }
 
-int		lum_intensity_sphere(t_sphere sphere, t_point ray, t_point spotlight)
+float	lum_intensity_sphere(t_sphere sphere, t_point ray, t_point spotlight)
 {
 	t_point	sphere_ray;
 	t_point	ray_spot;
@@ -80,15 +81,15 @@ int		lum_intensity_sphere(t_sphere sphere, t_point ray, t_point spotlight)
 	sphere_ray = vector(sphere.center, ray);
 	ray_spot = vector(ray, spotlight);
 	if ((result = dot(sphere_ray, ray_spot)) > 0)
-		return (color_shade(result, sphere.color));
-	else
-		return (0);
+		return (result);
+	return (0);
 }
 
 int		trace_ray(t_vect ray, t_figure *figures)
 {
 	int		i;
 	int		index;
+	float	lum_intensity;
 	float	closest_distance;
 	float	distance;
 	t_point	intersection;
@@ -96,13 +97,12 @@ int		trace_ray(t_vect ray, t_figure *figures)
 	t_point spotlight;
 
 	i = -1;
-	spotlight.x = 0;
+	spotlight.x = 4;
 	spotlight.y = 0;
 	spotlight.z = 0;
 	closest_distance = RENDER_DISTANCE;
 	while (++i < 2)
 	{
-		//if ((intersection = sphere_intersection(figures[i], ray)))
 		intersection = sphere_intersection(figures[i], ray);
 		if ((distance = norm(intersection)) < closest_distance)
 		{
@@ -113,8 +113,19 @@ int		trace_ray(t_vect ray, t_figure *figures)
 	}
 	if (closest_distance < RENDER_DISTANCE)
 	{
-		//printf("CI.x: %f,  CI.y: %f,  CI.z: %f\n", closest_intersection.x, closest_intersection.y, closest_intersection.z);
-		return (lum_intensity_sphere(figures[index], closest_intersection, spotlight));
+		i = -1;
+		lum_intensity = lum_intensity_sphere(figures[index], closest_intersection, spotlight);
+		while (++i < 2)
+		{
+			if (i == index)
+				continue;
+			if (sphere_eclipses_light(closest_intersection, figures[i], spotlight))
+			{
+				lum_intensity = AMBIENCE_LIGHTING;
+				break;
+			}
+		}
+		return (color_shade(lum_intensity, figures[index].color));
 	}
 	return (0);
 }
