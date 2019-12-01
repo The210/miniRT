@@ -6,7 +6,7 @@
 /*   By: dhorvill <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/30 19:15:30 by dhorvill          #+#    #+#             */
-/*   Updated: 2019/12/01 17:21:16 by dhorvill         ###   ########.fr       */
+/*   Updated: 2019/12/01 19:38:17 by dhorvill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,30 @@ t_vect	**init_tracer()
 	return (ray_table);
 }
 
-int	lum_intensity_sphere(t_sphere sphere, t_point ray, t_point spotlight)
+int		color_shade(float intensity, int color)
+{
+	int	result;
+	int	red;
+	int	green;
+	int	blue;
+	
+	red = color >> 16;
+	green = (color & 0xff00) >> 8;
+	blue = color & 0xff;
+
+	red *= intensity;
+	green *= intensity;
+	blue *= intensity;
+
+	red = red << 16;
+	green = green << 8;
+
+	result = red + green + blue;
+
+	return (result);
+}
+
+int		lum_intensity_sphere(t_sphere sphere, t_point ray, t_point spotlight)
 {
 	t_point	sphere_ray;
 	t_point	ray_spot;
@@ -57,7 +80,7 @@ int	lum_intensity_sphere(t_sphere sphere, t_point ray, t_point spotlight)
 	sphere_ray = vector(sphere.center, ray);
 	ray_spot = vector(ray, spotlight);
 	if ((result = dot(sphere_ray, ray_spot)) > 0)
-		return (round(255 * result) * pow(16, 4));
+		return (color_shade(result, sphere.color));
 	else
 		return (0);
 }

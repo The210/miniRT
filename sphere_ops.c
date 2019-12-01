@@ -6,7 +6,7 @@
 /*   By: dhorvill <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/16 18:01:17 by dhorvill          #+#    #+#             */
-/*   Updated: 2019/12/01 17:00:23 by dhorvill         ###   ########.fr       */
+/*   Updated: 2019/12/01 17:57:16 by dhorvill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ t_box		sphere_bounding_box(t_sphere sphere)
 	return (box);
 }
 
-t_sphere	create_sphere(float x, float y, float z, float radius)
+t_sphere	create_sphere(float x, float y, float z, float radius, int color)
 {
 	t_sphere	sphere;
 
@@ -49,6 +49,7 @@ t_sphere	create_sphere(float x, float y, float z, float radius)
 	sphere.center.y = y;
 	sphere.center.z = z;
 	sphere.radius = radius;
+	sphere.color = color;
 	//sphere.box = sphere_bounding_box(sphere);
 	//sphere.box.to_check = 1;
 	//printf("x:%f     y:%f     z:%f \n", sphere.center.x, sphere.center.y, sphere.center.z);
