@@ -40,6 +40,7 @@ typedef struct	s_box
 
 typedef struct	s_figure
 {
+	int			color;
 	float		radius;
 	float		x;
 	float		y;
@@ -73,7 +74,7 @@ typedef struct	s_polynome
 t_window	g_win;
 
 void		init_win(void);
-t_sphere	create_sphere(float x, float y, float z, float radius);
+t_sphere	create_sphere(float x, float y, float z, float radius, int color);
 t_point		sphere_intersection(t_sphere sphere, t_vect ray);
 float		norm(t_point vector);
 float		normsqrd(t_point vector);

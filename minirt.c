@@ -6,7 +6,7 @@
 /*   By: dhorvill <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/24 22:07:25 by dhorvill          #+#    #+#             */
-/*   Updated: 2019/12/01 17:29:03 by dhorvill         ###   ########.fr       */
+/*   Updated: 2019/12/01 19:39:39 by dhorvill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,8 @@ int		main(int argc, char **argv)
 		return (0);
 	ray_table = init_tracer();
 	init_win();
-	figures[0] = create_sphere(-50, 0, 100, 50);
-	figures[1] = create_sphere(0, 0, 100, 50);
+	figures[0] = create_sphere(-50, 0, 100, 50, 0x00aaaa);
+	figures[1] = create_sphere(0, 0, 100, 50, 0x00ffff);
 	clock_t begin = clock();
 
 	render_frame(ray_table, figures);
