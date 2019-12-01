@@ -6,11 +6,12 @@
 /*   By: dhorvill <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/24 22:07:25 by dhorvill          #+#    #+#             */
-/*   Updated: 2019/11/30 22:06:56 by dhorvill         ###   ########.fr       */
+/*   Updated: 2019/12/01 17:29:03 by dhorvill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
+#include <time.h>
 
 int	interact(int keycode, void *thing)
 {
@@ -25,14 +26,21 @@ int	interact(int keycode, void *thing)
 int		main(int argc, char **argv)
 {
 	t_vect		**ray_table;
-	t_figure	figures[1];
+	t_figure	figures[2];
 
 	if (!argc && argv[0])
 		return (0);
-	init_win();
 	ray_table = init_tracer();
+	init_win();
+	figures[0] = create_sphere(-50, 0, 100, 50);
+	figures[1] = create_sphere(0, 0, 100, 50);
+	clock_t begin = clock();
+
 	render_frame(ray_table, figures);
-	figures[0] = create_sphere(0, 0, 10, 5);
+
+	clock_t end = clock();
+	double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+	printf("Time Elapsed: %lf\n", time_spent);
 	mlx_key_hook(g_win.win, interact, NULL);
 	mlx_loop(g_win.mlx);
 	return (0);

@@ -5,10 +5,11 @@
 # include "mlx.h"
 # include <math.h>
 # include <fcntl.h>
+# include <stdio.h>
 
-# define WIN_HEIGHT 1000
-# define WIN_WIDTH 1000
-# define RENDER_DISTANCE 100000
+# define WIN_HEIGHT 800
+# define WIN_WIDTH 800
+# define RENDER_DISTANCE 100000000
 # define FOV_H M_PI / 2
 # define FOV_W M_PI / 2
 

@@ -6,7 +6,7 @@
 /*   By: dhorvill <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/16 18:01:17 by dhorvill          #+#    #+#             */
-/*   Updated: 2019/11/30 22:10:54 by dhorvill         ###   ########.fr       */
+/*   Updated: 2019/12/01 17:00:23 by dhorvill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ t_sphere	create_sphere(float x, float y, float z, float radius)
 	sphere.radius = radius;
 	//sphere.box = sphere_bounding_box(sphere);
 	//sphere.box.to_check = 1;
+	//printf("x:%f     y:%f     z:%f \n", sphere.center.x, sphere.center.y, sphere.center.z);
 	return (sphere);
 }
 
@@ -64,6 +65,8 @@ t_point		sphere_intersection(t_sphere sphere, t_vect ray)
 	equa.b = 2 * dot(ray, sphere.center);
 	equa.c = sphere.center.x * sphere.center.x + sphere.center.y * sphere.center.y 
 				+ sphere.center.z * sphere.center.z - sphere.radius * sphere.radius;
+	//printf("x:%f     y:%f     z:%f \n", sphere.center.x, sphere.center.y, sphere.center.z);
+
 	if ((equa.delta = equa.b * equa.b - 4 * equa.a * equa.c) <= 0)
 	{
 		result.x = RENDER_DISTANCE;
@@ -75,9 +78,9 @@ t_point		sphere_intersection(t_sphere sphere, t_vect ray)
 	{
 		equa.sqrt_delta = sqrt(equa.delta);
 		t = (-equa.b + equa.sqrt_delta) / (2 * equa.a);
-		result.x = t * ray.x;
-		result.y = t * ray.y;
-		result.z = t * ray.z;
+		result.x = t * ray.x * -1;
+		result.y = t * ray.y * -1;
+		result.z = t * ray.z * -1;
 		return (result);
 	}
 }
