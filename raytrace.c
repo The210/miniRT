@@ -6,7 +6,7 @@
 /*   By: dhorvill <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/30 19:15:30 by dhorvill          #+#    #+#             */
-/*   Updated: 2019/12/01 21:32:59 by dhorvill         ###   ########.fr       */
+/*   Updated: 2019/12/07 23:27:46 by dhorvill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ t_vect	**init_tracer()
 		while (++j < WIN_WIDTH)
 		{
 			ray_table[i][j].x = start.x + step.x * (float)j;
-			ray_table[i][j].y = start.y + step.y * (float)i; //daniel doubts
+			ray_table[i][j].y = start.y + step.y * (float)i; //daniel doubts, Etienne owns
 			ray_table[i][j].z = 1;
 			ray_table[i][j] = normalize(ray_table[i][j]);
 		}
@@ -48,28 +48,19 @@ t_vect	**init_tracer()
 	return (ray_table);
 }
 
-int		color_shade(float intensity, int color)
+int		color_shade(float intensity, t_figure figure, int reflective_color)
 {
-	int	result;
-	int	red;
-	int	green;
-	int	blue;
+	t_color base;
+	t_color	reflective_rgb;
 	
 	intensity = intensity < AMBIENCE_LIGHTING ? AMBIENCE_LIGHTING : intensity;
-	red = color >> 16;
-	green = (color & 0xff00) >> 8;
-	blue = color & 0xff;
-
-	red *= intensity;
-	green *= intensity;
-	blue *= intensity;
-
-	red = red << 16;
-	green = green << 8;
-
-	result = red + green + blue;
-
-	return (result);
+	base = color_intensity(figure.color, intensity);
+	if (figure.is_reflective > 0)
+	{
+		reflective_rgb = int_to_rgb(reflective_color);
+		return (weighted_average(base, reflective_rgb, figure.is_reflective));
+	}
+	return (rgb_to_int(base));
 }
 
 float	lum_intensity_sphere(t_sphere sphere, t_point ray, t_point spotlight)
@@ -85,25 +76,28 @@ float	lum_intensity_sphere(t_sphere sphere, t_point ray, t_point spotlight)
 	return (0);
 }
 
-int		trace_ray(t_vect ray, t_figure *figures)
+int		trace_ray(t_vect ray, t_figure *figures, t_point start, int	ignored_index)
 {
 	int		i;
 	int		index;
 	float	lum_intensity;
 	float	closest_distance;
 	float	distance;
+	int		reflective_color;
 	t_point	intersection;
 	t_point	closest_intersection;
 	t_point spotlight;
 
-	i = -1;
-	spotlight.x = 4;
+	spotlight.x = 0;
 	spotlight.y = 0;
 	spotlight.z = 0;
 	closest_distance = RENDER_DISTANCE;
-	while (++i < 2)
+	i = -1;
+	while (++i < 5)
 	{
-		intersection = sphere_intersection(figures[i], ray);
+		if (i == ignored_index)
+			continue;
+		intersection = sphere_intersection(figures[i], ray, start);
 		if ((distance = norm(intersection)) < closest_distance)
 		{
 			index = i;
@@ -113,9 +107,14 @@ int		trace_ray(t_vect ray, t_figure *figures)
 	}
 	if (closest_distance < RENDER_DISTANCE)
 	{
-		i = -1;
+		if (figures[index].is_reflective > 0)
+		{
+			reflective_color = trace_ray(get_reflective_vector(figures[index], closest_intersection, ray),
+						figures, closest_intersection, index);
+		}
 		lum_intensity = lum_intensity_sphere(figures[index], closest_intersection, spotlight);
-		while (++i < 2)
+		i = -1;
+		while (++i < 5)
 		{
 			if (i == index)
 				continue;
@@ -125,12 +124,12 @@ int		trace_ray(t_vect ray, t_figure *figures)
 				break;
 			}
 		}
-		return (color_shade(lum_intensity, figures[index].color));
+		return (color_shade(lum_intensity, figures[index], reflective_color));
 	}
 	return (0);
 }
 
-void	render_frame(t_vect **ray_table, t_figure *figures)
+void	render_frame(t_vect **ray_table, t_figure *figures, t_point start)
 {
 	int	i;
 	int	j;
@@ -140,7 +139,7 @@ void	render_frame(t_vect **ray_table, t_figure *figures)
 	{
 		j = -1;
 		while (++j < WIN_WIDTH)
-			g_win.buffer[j + i * WIN_HEIGHT] = trace_ray(ray_table[i][j], figures);
+			g_win.buffer[j + i * WIN_HEIGHT] = trace_ray(ray_table[i][j], figures, start, -1);
 	}
 	mlx_put_image_to_window(g_win.mlx, g_win.win, g_win.img, 0, 0);
 }

@@ -24,7 +24,12 @@ typedef struct	s_point
 
 typedef t_point t_vect;
 
-
+typedef	struct	s_color
+{
+	int			red;
+	int			green;
+	int			blue;
+}				t_color;
 
 typedef struct	s_box
 {
@@ -42,6 +47,8 @@ typedef struct	s_box
 typedef struct	s_figure
 {
 	int			color;
+	float		is_reflective;
+	float		refractive_index;
 	float		radius;
 	float		x;
 	float		y;
@@ -75,8 +82,8 @@ typedef struct	s_polynome
 t_window	g_win;
 
 void		init_win(void);
-t_sphere	create_sphere(float x, float y, float z, float radius, int color);
-t_point		sphere_intersection(t_sphere sphere, t_vect ray);
+t_sphere	create_sphere(float x, float y, float z, float radius, int color, float is_reflective);
+t_point		sphere_intersection(t_sphere sphere, t_vect ray, t_point start);
 float		norm(t_point vector);
 float		normsqrd(t_point vector);
 t_point		normalize(t_point vector);
@@ -86,9 +93,17 @@ t_vect		substract(t_vect v1, t_vect v2);
 t_vect		add(t_vect v1, t_vect v2);
 float		dot(t_point v1, t_point v2);
 float		distance(t_point p1, t_point p2);
-void		render_frame(t_vect **ray_table, t_figure *figures);
+void		render_frame(t_vect **ray_table, t_figure *figures, t_point start);
 t_vect		**init_tracer();
 int			sphere_eclipses_light(t_point intersection, t_sphere, t_point spot);
 t_vect		scale(t_vect v, float scalar);
+t_vect		get_reflective_vector(t_sphere sphere, t_point inter, t_vect incident);
+t_vect		new_vect(float x, float y, float z);
+t_vect		true_vect(t_vect v1, t_vect v2);
+t_color		int_to_rgb(int color_int);
+int			rgb_to_int(t_color color);
+t_color		rgb_color_intensity(t_color, float intensity);
+t_color		color_intensity(int color, float intensity);
+int			weighted_average(t_color base, t_color reflected_color, float weight);
 
 #endif

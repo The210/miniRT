@@ -6,7 +6,7 @@
 /*   By: dhorvill <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/24 18:36:49 by dhorvill          #+#    #+#             */
-/*   Updated: 2019/12/01 20:23:15 by dhorvill         ###   ########.fr       */
+/*   Updated: 2019/12/07 20:13:02 by dhorvill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,13 +53,23 @@ t_point	vector(t_point v1, t_point v2)
 	return (normalize(result));
 }
 
-t_vect	substract(t_vect v1, t_vect v2)
+t_vect	true_vect(t_point v1, t_point v2)
 {
-	t_vect result;
+	t_point result;
 
 	result.x = v2.x - v1.x;
 	result.y = v2.y - v1.y;
 	result.z = v2.z - v1.z;
+	return (result);
+}
+
+t_vect	substract(t_vect v1, t_vect v2)
+{
+	t_vect result;
+
+	result.x = v1.x - v2.x;
+	result.y = v1.y - v2.y;
+	result.z = v1.z - v2.z;
 	return (result);
 }
 
@@ -80,6 +90,16 @@ t_vect	scale(t_vect v, float scalar)
 	result.x = v.x * scalar;
 	result.y = v.y * scalar;
 	result.z = v.z * scalar;
+	return (result);
+}
+
+t_vect	new_vect(float x, float y, float z)
+{
+	t_vect	result;
+
+	result.x = x;
+	result.y = y;
+	result.z = z;
 	return (result);
 }
 
