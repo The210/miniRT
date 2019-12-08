@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   sphere_ops.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dhorvill <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: ede-thom <ede-thom@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/16 18:01:17 by dhorvill          #+#    #+#             */
-/*   Updated: 2019/12/01 17:00:23 by dhorvill         ###   ########.fr       */
+/*   Updated: 2019/12/08 02:10:13 by ede-thom         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ t_box		sphere_bounding_box(t_sphere sphere)
 	return (box);
 }
 
-t_sphere	create_sphere(float x, float y, float z, float radius)
+t_sphere	create_sphere(float x, float y, float z, float radius, int color)
 {
 	t_sphere	sphere;
 

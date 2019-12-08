@@ -78,6 +78,14 @@ typedef struct	s_scene
 	int			figure_count;
 }	            t_scene;
 
+typedef struct	s_drawable
+{
+	char				*name;
+	t_figure			(*create)(float x, float y, float z, float rad, int color);
+	//create always has the max number of arguments, even if irrelevant
+	struct s_drawable	*next;
+}				t_drawable;
+
 t_window	g_win;
 
 void		init_win(void);
@@ -94,5 +102,10 @@ float		dot(t_point v1, t_point v2);
 float		distance(t_point p1, t_point p2);
 void		render_frame(t_vect **ray_table, t_figure *figures);
 t_vect		**init_tracer();
+int			clean_exit(int status, char *msg);
+t_scene		parse_scene(char *scene_file_path, t_drawable *drawable_list);
 
 #endif
+
+
+int	printf(char *format, ...);

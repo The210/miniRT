@@ -6,7 +6,7 @@
 /*   By: ede-thom <ede-thom@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/01 19:29:35 by ede-thom          #+#    #+#             */
-/*   Updated: 2019/12/01 22:47:33 by ede-thom         ###   ########.fr       */
+/*   Updated: 2019/12/08 01:46:14 by ede-thom         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void    clean_exit(int status, char *str)
     if  (str)
         ft_putstr_fd(str, 1);
     else
-        ft_putstr("(null)", 1);
+        ft_putstr_fd("(null)", 1);
     ft_putchar_fd('\n', 1);
     exit(status);
 }
