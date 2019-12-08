@@ -6,6 +6,8 @@
 # include <math.h>
 # include <fcntl.h>
 # include <stdio.h>
+# include <stdlib.h>
+# include <unistd.h>
 
 # define WIN_HEIGHT 1000
 # define WIN_WIDTH 1000
@@ -13,6 +15,7 @@
 # define AMBIENCE_LIGHTING 0.15
 # define FOV_H M_PI / 2
 # define FOV_W M_PI / 2
+# define CREATE_ARGS float x, float y, float z, float radius, int color
 
 
 typedef struct	s_point
@@ -79,6 +82,21 @@ typedef struct	s_polynome
 	float		sqrt_delta;
 }				t_polynome;
 
+typedef struct	s_scene
+{
+	t_point		spotlight;
+	t_figure	*figure_list;
+	int			figure_count;
+}	            t_scene;
+
+typedef struct	s_drawable
+{
+	char				*name;
+	t_figure			(*create)(CREATE_ARGS);
+	//create always has the max number of arguments, even if irrelevant
+	struct s_drawable	*next;
+}				t_drawable;
+
 t_window	g_win;
 
 void		init_win(void);
@@ -105,5 +123,9 @@ int			rgb_to_int(t_color color);
 t_color		rgb_color_intensity(t_color, float intensity);
 t_color		color_intensity(int color, float intensity);
 int			weighted_average(t_color base, t_color reflected_color, float weight);
+void		clean_exit(int status, char *msg);
+t_scene		parse_scene(char *scene_file_path, t_drawable *drawable_list);
+float		ft_atof(char *nb);
+void		add_drawable(t_drawable **drawables, char *name, t_figure (*create_func)(CREATE_ARGS));
 
 #endif

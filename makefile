@@ -1,12 +1,12 @@
 # **************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
+#    makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: dhorvill <marvin@42.fr>                    +#+  +:+       +#+         #
+#    By: ede-thom <ede-thom@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/16 17:26:10 by dhorvill          #+#    #+#              #
-#    Updated: 2019/12/07 22:30:29 by dhorvill         ###   ########.fr        #
+#    Updated: 2019/12/08 17:16:49 by ede-thom         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME = miniRT
 
 LIBFT = libft.a
 
-SRCS = minirt.c setup_win.c sphere_ops.c vector_ops.c raytrace.c shadows.c reflection.c color_ops.c
+SRCS = minirt.c setup_win.c sphere_ops.c vector_ops.c raytrace.c shadows.c reflection.c color_ops.c ft_atof.c error.c parsing.c
 
 OBJ = $(SRC=.c:.o)
 
