@@ -6,12 +6,15 @@
 # include <math.h>
 # include <fcntl.h>
 # include <stdio.h>
+# include <stdlib.h>
+# include <unistd.h>
 
 # define WIN_HEIGHT 800
 # define WIN_WIDTH 800
 # define RENDER_DISTANCE 100000000
 # define FOV_H M_PI / 2
 # define FOV_W M_PI / 2
+# define CREATE_ARGS float x, float y, float z, float radius, int color
 
 
 typedef struct	s_point
@@ -22,8 +25,6 @@ typedef struct	s_point
 }				t_point;
 
 typedef t_point t_vect;
-
-
 
 typedef struct	s_box
 {
@@ -81,7 +82,7 @@ typedef struct	s_scene
 typedef struct	s_drawable
 {
 	char				*name;
-	t_figure			(*create)(float x, float y, float z, float rad, int color);
+	t_figure			(*create)(CREATE_ARGS);
 	//create always has the max number of arguments, even if irrelevant
 	struct s_drawable	*next;
 }				t_drawable;
@@ -102,10 +103,9 @@ float		dot(t_point v1, t_point v2);
 float		distance(t_point p1, t_point p2);
 void		render_frame(t_vect **ray_table, t_figure *figures);
 t_vect		**init_tracer();
-int			clean_exit(int status, char *msg);
+void		clean_exit(int status, char *msg);
 t_scene		parse_scene(char *scene_file_path, t_drawable *drawable_list);
+float		ft_atof(char *nb);
+void		add_drawable(t_drawable **drawables, char *name, t_figure (*create_func)(CREATE_ARGS));
 
 #endif
-
-
-int	printf(char *format, ...);
