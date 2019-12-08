@@ -15,7 +15,7 @@
 # define AMBIENCE_LIGHTING 0.15
 # define FOV_H M_PI / 2
 # define FOV_W M_PI / 2
-# define CREATE_ARGS float x, float y, float z, float radius, int color
+# define CREATE_ARGS float x, float y, float z, float radius, int color, float is_reflective
 
 
 typedef struct	s_point
@@ -111,7 +111,7 @@ t_vect		substract(t_vect v1, t_vect v2);
 t_vect		add(t_vect v1, t_vect v2);
 float		dot(t_point v1, t_point v2);
 float		distance(t_point p1, t_point p2);
-void		render_frame(t_vect **ray_table, t_figure *figures, t_point start);
+void		render_frame(t_vect **ray_table, t_scene scene, t_point start);
 t_vect		**init_tracer();
 int			sphere_eclipses_light(t_point intersection, t_sphere, t_point spot);
 t_vect		scale(t_vect v, float scalar);

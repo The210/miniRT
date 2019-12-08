@@ -6,7 +6,7 @@
 /*   By: dhorvill <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/30 19:15:30 by dhorvill          #+#    #+#             */
-/*   Updated: 2019/12/07 23:27:46 by dhorvill         ###   ########.fr       */
+/*   Updated: 2019/12/08 17:29:33 by dhorvill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ float	lum_intensity_sphere(t_sphere sphere, t_point ray, t_point spotlight)
 	return (0);
 }
 
-int		trace_ray(t_vect ray, t_figure *figures, t_point start, int	ignored_index)
+int		trace_ray(t_vect ray, t_scene scene, t_point start, int	ignored_index)
 {
 	int		i;
 	int		index;
@@ -86,18 +86,14 @@ int		trace_ray(t_vect ray, t_figure *figures, t_point start, int	ignored_index)
 	int		reflective_color;
 	t_point	intersection;
 	t_point	closest_intersection;
-	t_point spotlight;
 
-	spotlight.x = 0;
-	spotlight.y = 0;
-	spotlight.z = 0;
 	closest_distance = RENDER_DISTANCE;
 	i = -1;
-	while (++i < 5)
+	while (++i < scene.figure_count)
 	{
 		if (i == ignored_index)
 			continue;
-		intersection = sphere_intersection(figures[i], ray, start);
+		intersection = sphere_intersection(scene.figure_list[i], ray, start);
 		if ((distance = norm(intersection)) < closest_distance)
 		{
 			index = i;
@@ -107,29 +103,29 @@ int		trace_ray(t_vect ray, t_figure *figures, t_point start, int	ignored_index)
 	}
 	if (closest_distance < RENDER_DISTANCE)
 	{
-		if (figures[index].is_reflective > 0)
+		if (scene.figure_list[index].is_reflective > 0)
 		{
-			reflective_color = trace_ray(get_reflective_vector(figures[index], closest_intersection, ray),
-						figures, closest_intersection, index);
+			reflective_color = trace_ray(get_reflective_vector(scene.figure_list[index], closest_intersection, ray),
+						scene, closest_intersection, index);
 		}
-		lum_intensity = lum_intensity_sphere(figures[index], closest_intersection, spotlight);
+		lum_intensity = lum_intensity_sphere(scene.figure_list[index], closest_intersection, scene.spotlight);
 		i = -1;
-		while (++i < 5)
+		while (++i < scene.figure_count)
 		{
 			if (i == index)
 				continue;
-			if (sphere_eclipses_light(closest_intersection, figures[i], spotlight))
+			if (sphere_eclipses_light(closest_intersection, scene.figure_list[i], scene.spotlight))
 			{
 				lum_intensity = AMBIENCE_LIGHTING;
 				break;
 			}
 		}
-		return (color_shade(lum_intensity, figures[index], reflective_color));
+		return (color_shade(lum_intensity, scene.figure_list[index], reflective_color));
 	}
 	return (0);
 }
 
-void	render_frame(t_vect **ray_table, t_figure *figures, t_point start)
+void	render_frame(t_vect **ray_table, t_scene scene, t_point start)
 {
 	int	i;
 	int	j;
@@ -139,7 +135,7 @@ void	render_frame(t_vect **ray_table, t_figure *figures, t_point start)
 	{
 		j = -1;
 		while (++j < WIN_WIDTH)
-			g_win.buffer[j + i * WIN_HEIGHT] = trace_ray(ray_table[i][j], figures, start, -1);
+			g_win.buffer[j + i * WIN_HEIGHT] = trace_ray(ray_table[i][j], scene, start, -1);
 	}
 	mlx_put_image_to_window(g_win.mlx, g_win.win, g_win.img, 0, 0);
 }
