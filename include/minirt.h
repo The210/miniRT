@@ -1,7 +1,7 @@
 #ifndef MINIRT_H
 # define MINIRT_H
 
-# include "libft/libft.h"
+# include "libft.h"
 # include "mlx.h"
 # include <math.h>
 # include <fcntl.h>

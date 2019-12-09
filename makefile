@@ -10,33 +10,80 @@
 #                                                                              #
 # **************************************************************************** #
 
-NAME = miniRT
+SRCS		=	src/minirt.c\
+				src/setup_win.c\
+				src/sphere_ops.c\
+				src/vector_ops.c\
+				src/raytrace.c\
+				src/shadows.c\
+				src/reflection.c\
+				src/color_ops.c\
+				src/ft_atof.c\
+				src/error.c\
+				src/parsing.c
 
-LIBFT = libft.a
 
-SRCS = minirt.c setup_win.c sphere_ops.c vector_ops.c raytrace.c shadows.c reflection.c color_ops.c ft_atof.c error.c parsing.c
+MKDIR_P	=		mkdir -p
+RM			=	rm -f
 
-OBJ = $(SRC=.c:.o)
+NAME		=	miniRT
 
-INCLUDEPATH = libft/
+# **************************************************************************** #
 
-CC = gcc
+# Directories
+OBJ_DIR		=	obj
+INC_DIR		=	include
+# **************************************************************************** #
 
-CFLAGS = -Wall -Werror -Wextra
+# LIBFT
+LFT_NAME	=	libft.a
+LFT_PATH	=	./libft
+LFT_LIB		=	-L $(LFT_PATH) -lft
+LFT_INC		=	-I $(LFT_PATH)
+LFT_RULE	=	$(LFT_PATH)/$(LFT_NAME)
+# **************************************************************************** #
 
-all: $(NAME)
+OBJS		=	$(pathsubst src/%.c, $(OBJ_DIR)/%.o, $(SRCS))
+LIB			=	$(LFT_LIB) $(LSDL_LIB) -lmlx -framework OpenGL -framework AppKit
+INC			=	-I $(INC_DIR) $(LFT_INC) $(LSDL_INC)
 
-$(NAME): $(SRCS) $(LIBFT)
-	@$(CC) $(CFLAGS) -I$(INCLUDEPATH) $(INCLUDEPATH)$(LIBFT) $(SRCS) -o $(NAME) -lmlx -framework OpenGL -framework AppKit
+# COLORS
+RED			=	\033[0;31m
+GREEN		= 	\033[0;32m
+YELLOW		=	\033[0;33m
+BLUE		=	\033[0;34m
+MAGENTA		=	\033[0;35m
+CYAN		=	\033[0;36m
+RESET		=	\033[0m
+# **************************************************************************** #
+CFLAGS		=	-Wall -Wextra -Werror
 
-$(LIBFT):
-	@cd libft && make
+CC			=	gcc
 
-clean:
-	@cd libft && make clean
 
-fclean:
-	@cd libft && make fclean
-	@rm -f $(NAME)
+all:		${NAME}
 
-re: fclean all
+$(NAME):		$(OBJS) $(LFT_RULE)
+				@printf "$(CYAN)Done creating $(NAME) object files!\n$(RESET)"
+				@$(CC) $(CFLAGS) $(OBJS) -o $@ $(INC) $(LIB) 
+				@echo "$(CYAN)Created $(GREEN)$(NAME)$(CYAN)!! $(RESET)"
+
+$(OBJ_DIR)/%.o:	$(SRC_DIR)/%.c $(INC_DIR)/
+				@$(MKDIR_P) $(OBJ_DIR)
+				@$(CC) $(CFLAGS) -c $< -o $@ $(INC) $(LIB)
+				@printf "$(CYAN)Compiling $(MAGENTA)$<$(RESET)\r"
+
+$(LFT_RULE):
+				@make -C $(LFT_PATH)
+
+clean: 
+				@${RM} ${OBJS}
+				@echo "$(CYAN)TIDY UP $(RED)pls$(RESET)"
+
+fclean:			clean
+				@${RM} ${NAME}
+				@echo "$(CYAN)Everything is $(RED)c $(YELLOW)l $(GREEN)e $(CYAN)a $(MAGENTA)n $(RESET)"
+
+re:				fclean all
+
+.PHONY:	all clean fclean test re
