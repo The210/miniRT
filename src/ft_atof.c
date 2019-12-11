@@ -6,12 +6,11 @@
 /*   By: ede-thom <ede-thom@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/08 12:54:07 by ede-thom          #+#    #+#             */
-/*   Updated: 2019/12/08 13:27:41 by ede-thom         ###   ########.fr       */
+/*   Updated: 2019/12/11 22:09:01 by ede-thom         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft/libft.h"
-#include "minirt.h"
+#include "libft.h"
 
 float   ft_atof(char *nb)
 {

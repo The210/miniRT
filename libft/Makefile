@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ede-thom <marvin@42.fr>                    +#+  +:+       +#+         #
+#    By: ede-thom <ede-thom@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/07 20:31:38 by ede-thom          #+#    #+#              #
-#    Updated: 2019/11/14 22:27:21 by ede-thom         ###   ########.fr        #
+#    Updated: 2019/12/11 22:48:18 by ede-thom         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -89,7 +89,7 @@ RM		=	rm -f
 all:		${NAME}
 
 $(NAME):	${OBJS} ${BOBJS}
-			@echo "$(CYAN)Done creating object files!            $(RESET)"
+			@echo "$(CYAN)Done creating $(NAME) object files!            $(RESET)"
 			@ar -crs ${NAME} ${OBJS} ${BOBJS}
 			@echo "$(CYAN)Created $(GREEN)$(NAME)$(CYAN)!! $(RESET)"
 
@@ -99,16 +99,16 @@ $(NAME):	${OBJS} ${BOBJS}
 clean: 
 			@${RM} ${OBJS}
 			@${RM} ${BOBJS}
-			@echo "$(CYAN)TIDY UP $(RED)pls$(RESET)"
+			@echo "$(CYAN)$(NAME): clean $(RESET)"
 
 bonus:		${OBJS} ${BOBJS}
-			@echo "$(CYAN)DID SOME1 ORDER A $(YELLOW) BONUS $(CYAN)???$(RESET)"
+			@echo "$(NAME): $(CYAN)DID SOME1 ORDER A $(YELLOW) BONUS $(CYAN)???$(RESET)"
 			@ar -crs $(NAME) $(OBJS) $(BOBJS)
 			@echo "$(CYAN)Sucesfully created $(YELLOW)bonus $(GREEN)$(NAME)$(RESET)"
 
 fclean:		clean
 			@${RM} ${NAME}
-			@echo "$(CYAN)Everything is $(RED)c $(YELLOW)l $(GREEN)e $(CYAN)a $(MAGENTA)n $(RESET)"
+			@echo "$(CYAN)$(NAME): $(RED)f$(CYAN)clean $(RESET)"
 
 re:			fclean all
 
