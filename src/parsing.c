@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ede-thom <ede-thom@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/01 19:03:36 by ede-thom          #+#    #+#             */
-/*   Updated: 2019/12/08 17:44:59 by dhorvill         ###   ########.fr       */
+/*   Updated: 2019/12/29 12:38:41 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,13 +129,11 @@ static t_scene    create_figure(t_scene scene, char *cur_line, t_drawable *drawa
 
 static void build_scene(t_scene *scene, char **lines, t_drawable *drawables)
 {
-    int i;
     t_scene s;
 
     s = *scene;
     if (!(s.figure_list = (t_figure*)malloc(sizeof(t_figure) * s.figure_count)))
         clean_exit(1, "Failed to build scene (malloc wtf)");
-    i = 1;
     while (*lines)
     {
         s = create_figure(s, *lines, drawables);

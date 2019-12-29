@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raytrace.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dhorvill <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/30 19:15:30 by dhorvill          #+#    #+#             */
-/*   Updated: 2019/12/08 17:29:33 by dhorvill         ###   ########.fr       */
+/*   Updated: 2019/12/29 12:38:03 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,19 +124,3 @@ int		trace_ray(t_vect ray, t_scene scene, t_point start, int	ignored_index)
 	}
 	return (0);
 }
-
-void	render_frame(t_vect **ray_table, t_scene scene, t_point start)
-{
-	int	i;
-	int	j;
-
-	i = -1;
-	while (++i < WIN_HEIGHT)
-	{
-		j = -1;
-		while (++j < WIN_WIDTH)
-			g_win.buffer[j + i * WIN_HEIGHT] = trace_ray(ray_table[i][j], scene, start, -1);
-	}
-	mlx_put_image_to_window(g_win.mlx, g_win.win, g_win.img, 0, 0);
-}
-

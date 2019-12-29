@@ -2,7 +2,6 @@
 # define MINIRT_H
 
 # include "libft.h"
-# include "mlx.h"
 # include <math.h>
 # include <fcntl.h>
 # include <stdio.h>
@@ -62,17 +61,6 @@ typedef struct	s_figure
 
 typedef t_figure	t_sphere;
 
-typedef struct	s_window
-{
-	void		*mlx;
-	void		*win;
-	void		*img;
-	int			*buffer;
-	int			bpp;
-	int			endian;
-	int			s_l;
-}				t_window;
-
 typedef struct	s_polynome
 {
 	float		a;
@@ -97,7 +85,34 @@ typedef struct	s_drawable
 	struct s_drawable	*next;
 }				t_drawable;
 
-t_window	g_win;
+# ifndef USING_SDL
+#   include "mlx.h"
+	typedef struct	s_window
+	{
+		void		*mlx;
+		void		*win;
+		void		*img;
+		int			*buffer;
+		int			bpp;
+		int			endian;
+		int			s_l;
+	}				t_window;
+
+	t_window	g_win;
+# endif
+
+# ifdef USING_SDL
+#   include "SDL2/SDL.h"
+	typedef struct	s_sdl_win
+	{
+			SDL_Window *window;
+			SDL_Surface *screen;
+			SDL_Surface *used;
+	    	SDL_Event event;	
+	}		t_sdl_win;
+
+	t_sdl_win g_sdl_win;
+# endif
 
 void		init_win(void);
 t_sphere	create_sphere(float x, float y, float z, float radius, int color, float is_reflective);
@@ -127,5 +142,6 @@ void		clean_exit(int status, char *msg);
 t_scene		parse_scene(char *scene_file_path, t_drawable *drawable_list);
 float		ft_atof(char *nb);
 void		add_drawable(t_drawable **drawables, char *name, t_figure (*create_func)(CREATE_ARGS));
+int			trace_ray(t_vect ray, t_scene scene, t_point start, int	ignored_index);
 
 #endif

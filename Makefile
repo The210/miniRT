@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ede-thom <ede-thom@student.42.fr>          +#+  +:+       +#+         #
+#    By: marvin <marvin@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/16 17:26:10 by dhorvill          #+#    #+#              #
-#    Updated: 2019/12/11 22:54:02 by ede-thom         ###   ########.fr        #
+#    Updated: 2019/12/29 13:07:16 by marvin           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,8 @@ SRCS		=	src/minirt.c\
 				src/color_ops.c\
 				src/ft_atof.c\
 				src/error.c\
-				src/parsing.c
+				src/parsing.c\
+				src/window.c\
 
 
 MKDIR_P		=	mkdir -p
@@ -33,6 +34,7 @@ NAME		=	miniRT
 # Directories
 SRC_DIR		=	src
 OBJ_DIR		=	obj
+SDL_OBJ_DIR	=	obj_sdl
 INC_DIR		=	include
 # **************************************************************************** #
 
@@ -45,7 +47,10 @@ LFT_RULE	=	$(LFT_PATH)/$(LFT_NAME)
 # **************************************************************************** #
 
 OBJS		=	$(patsubst src/%.c, $(OBJ_DIR)/%.o, $(SRCS))
-LIB			=	$(LFT_LIB) $(LSDL_LIB) -lmlx -framework OpenGL -framework AppKit
+SDL_OBJS	=	$(patsubst src/%.c, $(SDL_OBJ_DIR)/%.o, $(SRCS))
+LIB			=	$(LFT_LIB) -lm
+LIB_MLX		= 	-lmlx -framework OpenGL -framework AppKit
+LIB_SDL		=	-lSDL2
 INC			=	-I $(INC_DIR) $(LFT_INC)
 
 # COLORS
@@ -69,16 +74,29 @@ $(OBJ_DIR)/%.o:	$(SRC_DIR)/%.c $(INC_DIR)/
 				@$(CC) $(CFLAGS) -c -o $@ $< $(INC)
 				@printf "$(CYAN)Compiling $(MAGENTA)$<$(RESET)\r"
 
+$(SDL_OBJ_DIR)/%.o:	$(SRC_DIR)/%.c $(INC_DIR)/
+				@$(MKDIR_P) $(SDL_OBJ_DIR)
+				@$(CC) -DUSING_SDL $(CFLAGS) -c -o $@ $< $(INC)
+				@printf "$(CYAN)Compiling $(MAGENTA)$<$(RESET)\r"
+
 $(NAME):		$(LFT_RULE) $(OBJS)
 				@printf "$(CYAN)Done creating $(NAME) object files!\n$(RESET)"
-				@$(CC) $(CFLAGS) $(OBJS) -o $@ $(INC) $(LIB) 
+				@$(CC) $(CFLAGS) $(OBJS) -o $@ $(INC) $(LIB) $(LIB_MLX) 
 				@echo "$(CYAN)Created $(GREEN)$(NAME)$(CYAN)!! $(RESET)"
+
+sdl:			$(LFT_RULE) $(SDL_OBJS)
+				@printf "$(CYAN)Done creating $(NAME) object files!\n$(RESET)"
+				@$(CC) $(CFLAGS) -DUSING_SDL $(SDL_OBJS) -o sdl_miniRT $(INC) $(LIB) $(LIB_SDL) 
+				@echo "$(CYAN)Created $(GREEN)$(NAME)$(CYAN)!! $(RESET)"
+
 
 $(LFT_RULE):
 				@make -C $(LFT_PATH)/
 
 clean: 
-				@${RM} ${OBJS}
+				@${RM} ${OBJS} $(SDL_OBJS)
+				@$(MKDIR_P) $(OBJ_DIR) $(SDL_OBJ_DIR)
+				@rmdir -p $(OBJ_DIR) $(SDL_OBJ_DIR)
 				@echo "$(CYAN)TIDY UP $(RED)pls$(RESET)"
 
 fclean:			clean
@@ -86,7 +104,7 @@ fclean:			clean
 				@make -C $(LFT_PATH) fclean
 				@echo "$(CYAN)Everything is $(RED)c $(YELLOW)l $(GREEN)e $(CYAN)a $(MAGENTA)n $(RESET)"
 				
-re:				re-libft fclean all
+re:				clean all
 
 re-libft:		
 				@make -C $(LFT_PATH) re
