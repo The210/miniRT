@@ -6,7 +6,7 @@
 /*   By: ede-thom <ede-thom@42.edu.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/30 19:15:30 by dhorvill          #+#    #+#             */
-/*   Updated: 2020/06/13 20:26:05 by ede-thom         ###   ########.fr       */
+/*   Updated: 2020/06/14 20:24:37 by ede-thom         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ int		trace_ray(t_vect ray, t_scene scene, t_point start, int prev_index, int ign
 	t_vect		modified_start;
 
 	if (++current_recursion_depth > MAX_RECURSION_DEPTH && !(current_recursion_depth = 0))
-		return (SKY_COLOR);
+		return (0);
 	closest_distance = RENDER_DISTANCE;
 	i = -1;
 	while (++i < scene.figure_count)
@@ -106,7 +106,7 @@ int		trace_ray(t_vect ray, t_scene scene, t_point start, int prev_index, int ign
 		if (i == prev_index && ignore)
 			continue;
 		intersection = sphere_intersection(scene.figure_list[i], ray, start);
-		if ((distance = norm(intersection)) < closest_distance)
+		if ((distance = norm(intersection)) < closest_distance) //does it work if not in 0 0 0?
 		{
 			index = i;
 			closest_distance = distance;
@@ -120,7 +120,6 @@ int		trace_ray(t_vect ray, t_scene scene, t_point start, int prev_index, int ign
 			reflective_color = trace_ray(get_reflective_vector(scene.figure_list[index], closest_intersection, ray),
 						scene, closest_intersection, index, 1, stack);
 		}
-		//refrkt?
 		if (scene.figure_list[index].is_refractive > 0)
 		{
 			refracted_dir = get_refraction_vector(scene.figure_list[index], closest_intersection, ray, peek(stack), scene.figure_list[index].material.refractive_index);
@@ -131,7 +130,6 @@ int		trace_ray(t_vect ray, t_scene scene, t_point start, int prev_index, int ign
 				push(&stack, scene.figure_list[index].material.refractive_index, index);
 			refractive_color = trace_ray(refracted_dir, scene, modified_start, -index, 0, stack);
 		}
-		//refract?
 		lum_intensity = lum_intensity_sphere(scene.figure_list[index], closest_intersection, scene.spotlight);
 		i = -1;
 		while (++i < scene.figure_count)

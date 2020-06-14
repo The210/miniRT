@@ -6,7 +6,7 @@
 /*   By: ede-thom <ede-thom@42.edu.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/01 19:03:36 by ede-thom          #+#    #+#             */
-/*   Updated: 2020/06/13 19:55:59 by ede-thom         ###   ########.fr       */
+/*   Updated: 2020/06/14 20:00:27 by ede-thom         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,7 @@ static t_scene    create_figure(t_scene scene, char *cur_line, t_drawable *drawa
                                          ft_atof(line[8]));
             scene.figure_list[i] = figure;
             i++;
+            break;
             //this segs if line[i] doesn't exist, should just put the value to 0 if that
         }
         if (ft_strncmp("Spotlight", line[0], ft_strlen(line[0])) == 0)
@@ -122,6 +123,7 @@ static t_scene    create_figure(t_scene scene, char *cur_line, t_drawable *drawa
             scene.spotlight.x = ft_atof(line[1]);
             scene.spotlight.y = ft_atof(line[2]);
             scene.spotlight.z = ft_atof(line[3]);
+            break;
         }
         drawables = drawables->next;
     }

@@ -15,7 +15,7 @@ t_vect  get_refraction_vector(t_figure sphere, t_point inter, t_vect incident, f
 
     r = 1 / cos(i1);
     g = sin(i2) / sin(i1);
-    return (normalize(new_vect(r * normal.x + g * incident.x, 
-                                r * normal.y + g * incident.y, 
-                                r * normal.z + g * incident.z)));
+    return (normalize(new_vect( -g * normal.x + r * incident.x, 
+                                -g * normal.y + r * incident.y, 
+                                g * normal.z + -r * incident.z)));
 }
