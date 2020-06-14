@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ede-thom <ede-thom@42.edu.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/24 22:07:25 by dhorvill          #+#    #+#             */
-/*   Updated: 2019/12/29 12:37:29 by marvin           ###   ########.fr       */
+/*   Updated: 2020/06/13 18:57:40 by ede-thom         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ int		main(int argc, char **argv)
 	t_point		start;
 	t_scene		scene;
 	t_drawable	*drawables;
+	t_r_stack	stack;
 
 	if (argc != 2)
 	{
@@ -34,10 +35,10 @@ int		main(int argc, char **argv)
 	start.x = 0;
 	start.y = 0;
 	start.z = 0;
-
+	stack = create_stack(MAX_RECURSION_DEPTH + 69, VOID_REFRACTIVE_INDEX);
 	clock_t begin = clock();
 
-	render_frame(ray_table, scene, start);
+	render_frame(ray_table, scene, start, stack);
 
 	clock_t end = clock();
 	double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: marvin <marvin@student.42.fr>              +#+  +:+       +#+         #
+#    By: ede-thom <ede-thom@42.edu.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/16 17:26:10 by dhorvill          #+#    #+#              #
-#    Updated: 2019/12/29 13:07:16 by marvin           ###   ########.fr        #
+#    Updated: 2020/06/13 20:33:40 by ede-thom         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,11 +17,15 @@ SRCS		=	src/minirt.c\
 				src/raytrace.c\
 				src/shadows.c\
 				src/reflection.c\
+				src/refraction.c\
 				src/color_ops.c\
 				src/ft_atof.c\
 				src/error.c\
 				src/parsing.c\
 				src/window.c\
+				src/stack.c\
+				src/normal_vect.c\
+
 
 
 MKDIR_P		=	mkdir -p
@@ -105,6 +109,8 @@ fclean:			clean
 				@echo "$(CYAN)Everything is $(RED)c $(YELLOW)l $(GREEN)e $(CYAN)a $(MAGENTA)n $(RESET)"
 				
 re:				clean all
+
+re-sdl:			clean sdl
 
 re-libft:		
 				@make -C $(LFT_PATH) re

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ede-thom <ede-thom@42.edu.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/01 19:03:36 by ede-thom          #+#    #+#             */
-/*   Updated: 2019/12/29 12:38:41 by marvin           ###   ########.fr       */
+/*   Updated: 2020/06/13 19:55:59 by ede-thom         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,9 @@ static t_scene    create_figure(t_scene scene, char *cur_line, t_drawable *drawa
                                          ft_atof(line[3]),
                                          ft_atof(line[4]),
                                          ft_atoi_base(line[5], "0123456789abcdef"),
-										 ft_atof(line[6]));
+										 ft_atof(line[6]),
+                                         ft_atof(line[7]),
+                                         ft_atof(line[8]));
             scene.figure_list[i] = figure;
             i++;
             //this segs if line[i] doesn't exist, should just put the value to 0 if that

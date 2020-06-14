@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raytrace.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ede-thom <ede-thom@42.edu.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/30 19:15:30 by dhorvill          #+#    #+#             */
-/*   Updated: 2019/12/29 12:38:03 by marvin           ###   ########.fr       */
+/*   Updated: 2020/06/13 20:26:05 by ede-thom         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,19 +48,24 @@ t_vect	**init_tracer()
 	return (ray_table);
 }
 
-int		color_shade(float intensity, t_figure figure, int reflective_color)
+int		color_shade(float intensity, t_figure figure, int reflective_color, int refractive_color)
 {
 	t_color base;
 	t_color	reflective_rgb;
+	t_color refractive_rgb;
 	
 	intensity = intensity < AMBIENCE_LIGHTING ? AMBIENCE_LIGHTING : intensity;
 	base = color_intensity(figure.color, intensity);
+	reflective_rgb = int_to_rgb(0);
+	refractive_rgb = int_to_rgb(0);
 	if (figure.is_reflective > 0)
-	{
 		reflective_rgb = int_to_rgb(reflective_color);
-		return (weighted_average(base, reflective_rgb, figure.is_reflective));
-	}
-	return (rgb_to_int(base));
+	if (figure.is_refractive > 0)
+		refractive_rgb = int_to_rgb(refractive_color);
+	if (figure.is_reflective == 0 && figure.is_refractive == 0)
+		return (rgb_to_int(base));
+	return (weighted_average(base, reflective_rgb, figure.is_reflective, refractive_rgb, figure.is_refractive));
+
 }
 
 float	lum_intensity_sphere(t_sphere sphere, t_point ray, t_point spotlight)
@@ -76,22 +81,29 @@ float	lum_intensity_sphere(t_sphere sphere, t_point ray, t_point spotlight)
 	return (0);
 }
 
-int		trace_ray(t_vect ray, t_scene scene, t_point start, int	ignored_index)
+int		trace_ray(t_vect ray, t_scene scene, t_point start, int prev_index, int ignore, t_r_stack stack) //ignored index is to be changed (last_HIT_index)
 {
-	int		i;
-	int		index;
-	float	lum_intensity;
-	float	closest_distance;
-	float	distance;
-	int		reflective_color;
-	t_point	intersection;
-	t_point	closest_intersection;
+	int			i;
+	int			index;
+	float		lum_intensity;
+	float		closest_distance;
+	float		distance;
+	int			reflective_color;
+	int			refractive_color;
 
+	static int 	current_recursion_depth = 0;
+	t_point		intersection;
+	t_point		closest_intersection;
+	t_vect		refracted_dir;
+	t_vect		modified_start;
+
+	if (++current_recursion_depth > MAX_RECURSION_DEPTH && !(current_recursion_depth = 0))
+		return (SKY_COLOR);
 	closest_distance = RENDER_DISTANCE;
 	i = -1;
 	while (++i < scene.figure_count)
 	{
-		if (i == ignored_index)
+		if (i == prev_index && ignore)
 			continue;
 		intersection = sphere_intersection(scene.figure_list[i], ray, start);
 		if ((distance = norm(intersection)) < closest_distance)
@@ -106,8 +118,20 @@ int		trace_ray(t_vect ray, t_scene scene, t_point start, int	ignored_index)
 		if (scene.figure_list[index].is_reflective > 0)
 		{
 			reflective_color = trace_ray(get_reflective_vector(scene.figure_list[index], closest_intersection, ray),
-						scene, closest_intersection, index);
+						scene, closest_intersection, index, 1, stack);
 		}
+		//refrkt?
+		if (scene.figure_list[index].is_refractive > 0)
+		{
+			refracted_dir = get_refraction_vector(scene.figure_list[index], closest_intersection, ray, peek(stack), scene.figure_list[index].material.refractive_index);
+			modified_start = add(closest_intersection, scale(refracted_dir, EPSILON));
+			if (index == peek_index(stack))
+				pop(&stack);
+			else
+				push(&stack, scene.figure_list[index].material.refractive_index, index);
+			refractive_color = trace_ray(refracted_dir, scene, modified_start, -index, 0, stack);
+		}
+		//refract?
 		lum_intensity = lum_intensity_sphere(scene.figure_list[index], closest_intersection, scene.spotlight);
 		i = -1;
 		while (++i < scene.figure_count)
@@ -120,7 +144,9 @@ int		trace_ray(t_vect ray, t_scene scene, t_point start, int	ignored_index)
 				break;
 			}
 		}
-		return (color_shade(lum_intensity, scene.figure_list[index], reflective_color));
+		current_recursion_depth--;
+		return (color_shade(lum_intensity, scene.figure_list[index], reflective_color, refractive_color));
 	}
-	return (0);
+	current_recursion_depth--;
+	return (SKY_COLOR);
 }

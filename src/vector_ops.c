@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vector_ops.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dhorvill <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: ede-thom <ede-thom@42.edu.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/24 18:36:49 by dhorvill          #+#    #+#             */
-/*   Updated: 2019/12/07 20:13:02 by dhorvill         ###   ########.fr       */
+/*   Updated: 2020/06/09 18:07:55 by ede-thom         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,4 +111,9 @@ float	dot(t_point v1, t_point v2)
 float	distance(t_point p1, t_point p2)
 {
 	return (sqrt(pow(p2.x - p1.x, 2) + pow(p2.y - p1.y, 2) + pow(p2.z - p1.z, 2)));
+}
+
+float	angle(t_vect v1, t_vect v2)
+{
+	return(acos(dot(v1, v2) / (norm(v1) * norm(v2))));
 }

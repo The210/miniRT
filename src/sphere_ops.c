@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   sphere_ops.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ede-thom <ede-thom@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ede-thom <ede-thom@42.edu.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/16 18:01:17 by dhorvill          #+#    #+#             */
-/*   Updated: 2019/12/08 17:14:19 by ede-thom         ###   ########.fr       */
+/*   Updated: 2020/06/13 19:55:00 by ede-thom         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ t_box		sphere_bounding_box(t_sphere sphere)
 	return (box);
 }
 
-t_sphere	create_sphere(float x, float y, float z, float radius, int color, float is_reflective)
+t_sphere	create_sphere(float x, float y, float z, float radius, int color, float is_reflective, float is_refractive, float refractive_index)
 {
 	t_sphere	sphere;
 
@@ -51,6 +51,8 @@ t_sphere	create_sphere(float x, float y, float z, float radius, int color, float
 	sphere.radius = radius;
 	sphere.color = color;
 	sphere.is_reflective = is_reflective;
+	sphere.is_refractive = is_refractive;
+	sphere.material.refractive_index = refractive_index;
 	//sphere.box = sphere_bounding_box(sphere);
 	//sphere.box.to_check = 1;
 	//printf("x:%f     y:%f     z:%f \n", sphere.center.x, sphere.center.y, sphere.center.z);
@@ -74,7 +76,15 @@ t_point		sphere_intersection(t_sphere sphere, t_vect ray, t_point start)
 	if ((equa.delta = equa.b * equa.b - 4 * equa.a * equa.c) > 0)
 	{
 		equa.sqrt_delta = sqrt(equa.delta);
-		t = -((-equa.b + equa.sqrt_delta) / (2 * equa.a));
+		t = ((-equa.b + equa.sqrt_delta) / (2 * equa.a)) * -1;
+		if (t > 0)
+		{
+			result.x = start.x + t * ray.x;
+			result.y = start.y + t * ray.y;
+			result.z = start.z + t * ray.z;
+			return (result);
+		}
+		t = ((-equa.b - equa.sqrt_delta) / (2 * equa.a)) * -1;
 		if (t > 0)
 		{
 			result.x = start.x + t * ray.x;

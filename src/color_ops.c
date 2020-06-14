@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   color_ops.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dhorvill <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: ede-thom <ede-thom@42.edu.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/07 20:40:57 by dhorvill          #+#    #+#             */
-/*   Updated: 2019/12/08 00:23:36 by dhorvill         ###   ########.fr       */
+/*   Updated: 2020/06/13 20:17:04 by ede-thom         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,20 +48,18 @@ t_color	color_intensity(int color, float intensity)
 	return (rgb_color_intensity(rgb, intensity));
 }
 
-int		weighted_average(t_color base, t_color reflected_color, float weight)
+int		weighted_average(t_color base, t_color reflected, float weight1, t_color refracted, float weight2) 
 {
-	float	r_diff;
-	float	g_diff;
-	float	b_diff;
 	t_color	result;
 
-	r_diff = reflected_color.red - base.red;
-	g_diff = reflected_color.green - base.green;
-	b_diff = reflected_color.blue - base.blue;
-
-	result.red = (int)(r_diff * weight) + base.red;
-	result.green = (int)(g_diff * weight) + base.green;
-	result.blue = (int)(b_diff * weight) + base.blue;
-
+	result.red = (int)(reflected.red * weight1) 
+				+ (int)(refracted.red * weight2) 
+				+ (int)(base.red * (1 - weight1 - weight2));
+	result.green = (int)(reflected.green * weight1) 
+				+ (int)(refracted.green * weight2) 
+				+ (int)(base.green * (1 - weight1 - weight2));
+	result.blue = (int)(reflected.blue * weight1) 
+				+ (int)(refracted.blue * weight2) 
+				+ (int)(base.blue * (1 - weight1 - weight2));
 	return (rgb_to_int(result));
 }
