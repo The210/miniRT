@@ -13,13 +13,14 @@
 # define EPSILON 0.001
 # define WIN_WIDTH 1000
 # define RENDER_DISTANCE 100000000
-# define AMBIENCE_LIGHTING 0.15
+# define AMBIENCE_LIGHTING 0.03
 # define VOID_REFRACTIVE_INDEX 1
-# define SKY_COLOR 0x021517
+# define SKY_COLOR 0x0
 # define FOV_H M_PI / 2
 # define FOV_W M_PI / 2
 # define CREATE_ARGS float x, float y, float z, float radius, int color, float is_reflective, float is_refractive, float refractive_index
 # define MAX_RECURSION_DEPTH 30
+# define SCREEN_GAMMA 2.2
 
 
 typedef struct	s_point
@@ -37,6 +38,13 @@ typedef	struct	s_color
 	int			green;
 	int			blue;
 }				t_color;
+
+typedef	struct	s_fcolor
+{
+	double			red;
+	double			green;
+	double			blue;
+}				t_fcolor;
 
 typedef struct	s_box
 {
@@ -150,6 +158,8 @@ t_vect	  	get_refraction_vector(t_figure figure, t_point inter, t_vect incident,
 t_vect		new_vect(float x, float y, float z);
 t_vect		true_vect(t_vect v1, t_vect v2);
 t_color		int_to_rgb(int color_int);
+t_fcolor	int_to_fcolor(int color_int);
+int			fcolor_to_int(t_fcolor color);
 int			rgb_to_int(t_color color);
 t_color		rgb_color_intensity(t_color, float intensity);
 t_color		color_intensity(int color, float intensity);

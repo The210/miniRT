@@ -6,7 +6,7 @@
 /*   By: ede-thom <ede-thom@42.edu.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/07 20:40:57 by dhorvill          #+#    #+#             */
-/*   Updated: 2020/06/13 20:17:04 by ede-thom         ###   ########.fr       */
+/*   Updated: 2020/06/15 21:51:46 by ede-thom         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,36 @@ t_color	int_to_rgb(int color_int)
 	return (rgb);
 }
 
+t_fcolor	int_to_fcolor(int color_int)
+{
+	t_color		rgb;
+	t_fcolor	f_rgb;
+
+	rgb = int_to_rgb(color_int);
+
+	f_rgb.red = (float)rgb.red / 255.0;
+	f_rgb.green = (float)rgb.green / 255.0;
+	f_rgb.blue = (float)rgb.blue / 255.0;
+
+	return (f_rgb);
+}
+
 int		rgb_to_int(t_color color)
 {
 	color.red = color.red << 16;
 	color.green = color.green << 8;
 
 	return (color.red + color.green + color.blue);
+}
+
+int		fcolor_to_int(t_fcolor color)
+{
+	t_color rgb;
+
+	rgb.red = color.red * 255.0;
+	rgb.green = color.green * 255.0;
+	rgb.blue = color.blue * 255.0;
+	return (rgb_to_int(rgb));
 }
 
 t_color	rgb_color_intensity(t_color color, float intensity)

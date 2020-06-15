@@ -6,7 +6,7 @@
 /*   By: ede-thom <ede-thom@42.edu.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/30 19:15:30 by dhorvill          #+#    #+#             */
-/*   Updated: 2020/06/14 20:24:37 by ede-thom         ###   ########.fr       */
+/*   Updated: 2020/06/14 21:05:49 by ede-thom         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ int		trace_ray(t_vect ray, t_scene scene, t_point start, int prev_index, int ign
 		if (i == prev_index && ignore)
 			continue;
 		intersection = sphere_intersection(scene.figure_list[i], ray, start);
-		if ((distance = norm(intersection)) < closest_distance) //does it work if not in 0 0 0?
+		if ((distance = norm(intersection)) < closest_distance)
 		{
 			index = i;
 			closest_distance = distance;

@@ -4,4 +4,6 @@
 
 #   type       center.x    center.y    center.z     radius  color	is_reflective
 
-    Sphere     0           0           2           3       ff00ff	0
+    Sphere     0            5           15            5        ff0000	0               0         1
+    Sphere     0            0           5          2           ffffff	0               0.7         0.2
+    Spotlight  0            20          0   

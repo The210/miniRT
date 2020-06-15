@@ -1,7 +1,23 @@
 #include "minirt.h"
+	
+	
+	
+int	gamma_corrected(int color, double one_over_gamma)
+{
+	t_fcolor	rgb;
 
+	rgb = int_to_fcolor(color);
+
+	rgb.red = pow(rgb.red, one_over_gamma);
+	rgb.green = pow(rgb.green, one_over_gamma);
+	rgb.blue = pow(rgb.blue, one_over_gamma);
+	
+	return (fcolor_to_int(rgb));
+}
 #ifdef USING_SDL
 
+
+	
 	void put_pixel32( SDL_Surface *surface, int x, int y, Uint32 pixel)
 	{
 		Uint32 *pixels = (Uint32 *)surface ->pixels;
@@ -22,13 +38,19 @@
 	{
 		int	i;
 		int	j;
+		int color;
+		double one_over_gamma;
 
+		one_over_gamma = 1 / SCREEN_GAMMA;
 		i = -1;
 		while (++i < WIN_HEIGHT)
 		{
 			j = -1;
 			while (++j < WIN_WIDTH)
-				put_pixel32(g_sdl_win.screen, j, i, trace_ray(ray_table[i][j], scene, start, -1, 0, stack));
+			{
+				color = trace_ray(ray_table[i][j], scene, start, -1, 0, stack);
+				put_pixel32(g_sdl_win.screen, j, i, gamma_corrected(color, one_over_gamma));
+			}
 		}
 		SDL_UpdateWindowSurface(g_sdl_win.window);
 	}
@@ -77,13 +99,19 @@ void	render_frame(t_vect **ray_table, t_scene scene, t_point start, t_r_stack st
 	{
 		int	i;
 		int	j;
+		int color;
+		double one_over_gamma;
 
+		one_over_gamma = 1 / SCREEN_GAMMA;
 		i = -1;
 		while (++i < WIN_HEIGHT)
 		{
 			j = -1;
 			while (++j < WIN_WIDTH)
-				g_win.buffer[j + i * WIN_HEIGHT] = trace_ray(ray_table[i][j], scene, start, -1, 0, stack);
+			{
+				color = trace_ray(ray_table[i][j], scene, start, -1, 0, stack);
+				g_win.buffer[j + i * WIN_HEIGHT] = gamma_corrected(color, one_over_gamma);
+			}
 		}
 		mlx_put_image_to_window(g_win.mlx, g_win.win, g_win.img, 0, 0);
 	}
