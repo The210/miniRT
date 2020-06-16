@@ -10,17 +10,18 @@
 # include <unistd.h>
 
 # define WIN_HEIGHT 1000
-# define EPSILON 0.001
+# define EPSILON 0.00001
 # define WIN_WIDTH 1000
 # define RENDER_DISTANCE 100000000
 # define AMBIENCE_LIGHTING 0.03
 # define VOID_REFRACTIVE_INDEX 1
-# define SKY_COLOR 0x0
+# define SKY_COLOR 0x0a0a0a
 # define FOV_H M_PI / 2
 # define FOV_W M_PI / 2
 # define CREATE_ARGS float x, float y, float z, float radius, int color, float is_reflective, float is_refractive, float refractive_index
-# define MAX_RECURSION_DEPTH 30
+# define MAX_RECURSION_DEPTH 10
 # define SCREEN_GAMMA 2.2
+# define ZERO_FLOAT_PRECISION 0.0001
 
 
 typedef struct	s_point
@@ -169,6 +170,6 @@ t_scene		parse_scene(char *scene_file_path, t_drawable *drawable_list);
 float		ft_atof(char *nb);
 void		add_drawable(t_drawable **drawables, char *name, t_figure (*create_func)(CREATE_ARGS));
 int			trace_ray(t_vect ray, t_scene scene, t_point start, int	prev_index, int ignore, t_r_stack stack);
-float		angle(t_vect v1, t_vect v2);
+double		angle(t_vect v1, t_vect v2);
 
 #endif
