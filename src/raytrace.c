@@ -6,7 +6,7 @@
 /*   By: ede-thom <ede-thom@42.edu.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/30 19:15:30 by dhorvill          #+#    #+#             */
-/*   Updated: 2020/06/16 14:52:47 by ede-thom         ###   ########.fr       */
+/*   Updated: 2020/06/16 17:12:38 by ede-thom         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,10 +95,14 @@ int		trace_ray(t_vect ray, t_scene scene, t_point start, int prev_index, int ign
 	t_point		intersection;
 	t_point		closest_intersection;
 	t_vect		refracted_dir;
+	t_vect		reflected_dir;
 	t_vect		modified_start;
 
-	if (++current_recursion_depth > MAX_RECURSION_DEPTH && !(current_recursion_depth = 0))
+	if (++current_recursion_depth > MAX_RECURSION_DEPTH)
+	{
+		current_recursion_depth--;
 		return (0);
+	}
 	closest_distance = RENDER_DISTANCE;
 	i = -1;
 	while (++i < scene.figure_count)
@@ -115,10 +119,11 @@ int		trace_ray(t_vect ray, t_scene scene, t_point start, int prev_index, int ign
 	}
 	if (closest_distance < RENDER_DISTANCE)
 	{
-		if (scene.figure_list[index].is_reflective > 0)
+		if (scene.figure_list[index].is_reflective > 0 && index != peek_index(stack))
 		{
-			reflective_color = trace_ray(get_reflective_vector(scene.figure_list[index], closest_intersection, ray),
-						scene, closest_intersection, index, 1, stack);
+			reflected_dir = get_reflective_vector(scene.figure_list[index], closest_intersection, ray);
+			modified_start = add(closest_intersection, scale(reflected_dir, EPSILON)); 
+			reflective_color = trace_ray(reflected_dir, scene, modified_start, index, 0, stack);
 		}
 		if (scene.figure_list[index].is_refractive > 0)
 		{
