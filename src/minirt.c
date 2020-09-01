@@ -35,7 +35,7 @@ int		main(int argc, char **argv)
 	start.x = 0;
 	start.y = 0;
 	start.z = 0;
-	stack = create_stack(MAX_RECURSION_DEPTH + 69, VOID_REFRACTIVE_INDEX);
+	stack = create_stack(MAX_RECURSION_DEPTH + 69, 1);
 	clock_t begin = clock();
 
 	render_frame(ray_table, scene, start, stack);

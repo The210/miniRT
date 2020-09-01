@@ -38,7 +38,7 @@ t_box		sphere_bounding_box(t_sphere sphere)
 	return (box);
 }
 
-t_sphere	create_sphere(float x, float y, float z, float radius, int color, float is_reflective, float is_refractive, float refractive_index)
+t_sphere	create_sphere(float x, float y, float z, float radius, int color, float is_reflective)
 {
 	t_sphere	sphere;
 
@@ -51,11 +51,6 @@ t_sphere	create_sphere(float x, float y, float z, float radius, int color, float
 	sphere.radius = radius;
 	sphere.color = color;
 	sphere.is_reflective = is_reflective;
-	sphere.is_refractive = is_refractive;
-	sphere.material.refractive_index = refractive_index;
-	//sphere.box = sphere_bounding_box(sphere);
-	//sphere.box.to_check = 1;
-	//printf("x:%f     y:%f     z:%f \n", sphere.center.x, sphere.center.y, sphere.center.z);
 	return (sphere);
 }
 

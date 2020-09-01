@@ -72,18 +72,15 @@ t_color	color_intensity(int color, float intensity)
 	return (rgb_color_intensity(rgb, intensity));
 }
 
-int		weighted_average(t_color base, t_color reflected, float weight1, t_color refracted, float weight2) 
+int		weighted_average(t_color base, t_color reflected, float weight1) 
 {
 	t_color	result;
 
 	result.red = (int)(reflected.red * weight1) 
-				+ (int)(refracted.red * weight2) 
-				+ (int)(base.red * (1 - weight1 - weight2));
+				+ (int)(base.red * (1 - weight1));
 	result.green = (int)(reflected.green * weight1) 
-				+ (int)(refracted.green * weight2) 
-				+ (int)(base.green * (1 - weight1 - weight2));
+				+ (int)(base.green * (1 - weight1));
 	result.blue = (int)(reflected.blue * weight1) 
-				+ (int)(refracted.blue * weight2) 
-				+ (int)(base.blue * (1 - weight1 - weight2));
+				+ (int)(base.blue * (1 - weight1));
 	return (rgb_to_int(result));
 }

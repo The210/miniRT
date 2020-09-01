@@ -5,3 +5,4 @@ DS_Store
 miniRT
 *.a
 sdl_miniRT
+.vscode

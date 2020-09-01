@@ -110,9 +110,7 @@ static t_scene    create_figure(t_scene scene, char *cur_line, t_drawable *drawa
                                          ft_atof(line[3]),
                                          ft_atof(line[4]),
                                          ft_atoi_base(line[5], "0123456789abcdef"),
-										 ft_atof(line[6]),
-                                         ft_atof(line[7]),
-                                         ft_atof(line[8]));
+										 ft_atof(line[6]));
             scene.figure_list[i] = figure;
             i++;
             break;

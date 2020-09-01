@@ -14,11 +14,10 @@
 # define WIN_WIDTH 1000
 # define RENDER_DISTANCE 100000000
 # define AMBIENCE_LIGHTING 0.03
-# define VOID_REFRACTIVE_INDEX 1
 # define SKY_COLOR 0x63bbf2
 # define FOV_H M_PI / 2
 # define FOV_W M_PI / 2
-# define CREATE_ARGS float x, float y, float z, float radius, int color, float is_reflective, float is_refractive, float refractive_index
+# define CREATE_ARGS float x, float y, float z, float radius, int color, float is_reflective
 # define MAX_RECURSION_DEPTH 5
 # define SCREEN_GAMMA 2.2
 # define ZERO_FLOAT_PRECISION 0.0001
@@ -63,7 +62,6 @@ typedef struct	s_box
 typedef struct	s_material
 {
 	float		is_reflective;
-	float		refractive_index;
 	float		attenuation_coef;
 }				t_material;
 
@@ -71,7 +69,6 @@ typedef struct	s_figure
 {
 	int			color;
 	float		is_reflective;
-	float		is_refractive;
 	float		radius;
 	float		x;
 	float		y;
@@ -137,7 +134,7 @@ typedef struct	s_drawable
 # endif
 
 void		init_win(void);
-t_sphere	create_sphere(float x, float y, float z, float radius, int color, float is_reflective, float is_refractive, float refractive_index);
+t_sphere	create_sphere(float x, float y, float z, float radius, int color, float is_reflective);
 t_point		sphere_intersection(t_sphere sphere, t_vect ray, t_point start);
 float		norm(t_point vector);
 float		normsqrd(t_point vector);
@@ -154,7 +151,6 @@ int			sphere_eclipses_light(t_point intersection, t_sphere, t_point spot);
 t_vect		scale(t_vect v, float scalar);
 
 t_vect		get_reflective_vector(t_sphere sphere, t_point inter, t_vect incident);
-t_vect	  	get_refraction_vector(t_figure figure, t_point inter, t_vect incident, float n_entry, float n_exit);
 
 t_vect		new_vect(float x, float y, float z);
 t_vect		true_vect(t_vect v1, t_vect v2);
@@ -164,7 +160,7 @@ int			fcolor_to_int(t_fcolor color);
 int			rgb_to_int(t_color color);
 t_color		rgb_color_intensity(t_color, float intensity);
 t_color		color_intensity(int color, float intensity);
-int			weighted_average(t_color base, t_color reflected, float weight1, t_color refractive, float weight2);
+int			weighted_average(t_color base, t_color reflected, float weight1);
 void		clean_exit(int status, char *msg);
 t_scene		parse_scene(char *scene_file_path, t_drawable *drawable_list);
 float		ft_atof(char *nb);
