@@ -12,45 +12,35 @@
 
 #include "minirt.h"
 
-t_box		sphere_bounding_box(t_sphere sphere)
+char*		check_sphere_args(t_parse_args parsed)
 {
-	t_point p;
-	t_box box;
+	float args[MAX_PARSE_FIGURE_ARGUMENTS];
 
-	p.x = sphere.x - sphere.radius;
-	p.y = sphere.y + sphere.radius;
-	p.z = sphere.z + sphere.radius;
-	box.ulf = p;
-	p.x = sphere.x + sphere.radius;
-	box.urf = p;
-	p.y = sphere.y - sphere.radius;
-	box.drf = p;
-	p.x = sphere.x - sphere.radius;
-	box.dlf = p;
-	p.z = sphere.z - sphere.radius;
-	box.dlc = p;
-	p.x = sphere.x + sphere.radius;
-	box.drc = p;
-	p.y = sphere.y + sphere.radius;
-	box.urc = p;
-	p.x = sphere.x - sphere.radius;
-	box.ulc = p;
-	return (box);
+	ft_memmove(args, parsed.args, parsed.size);
+	if (parsed.size < 7 )
+		return ("Not enough arguments for a sphere.");
+	if (args[4] > 255 || args[5] > 255 || args[6] > 255 ||
+		args[4] < 0   || args[5] < 0   || args[6] < 0)
+		return ("Invalid RGB color values for sphere (must be values between 0 and 255 per color).");
+	return (NULL);
 }
 
-t_sphere	create_sphere(float x, float y, float z, float radius, int color, float is_reflective)
+t_sphere	create_sphere(t_parse_args parsed)
 {
 	t_sphere	sphere;
+	char *msg;
+	msg = check_sphere_args(parsed);
+	if (msg != NULL)
+		clean_exit(0, msg);
 
-	sphere.x = x;
-	sphere.y = y;
-	sphere.z = z;
-	sphere.center.x = x;
-	sphere.center.y = y;
-	sphere.center.z = z;
-	sphere.radius = radius;
-	sphere.color = color;
-	sphere.is_reflective = is_reflective;
+	sphere.x = parsed.args[0];
+	sphere.y = parsed.args[1];
+	sphere.z = parsed.args[2];
+	sphere.center = new_vect(parsed.args[0], parsed.args[1], parsed.args[2]);
+	sphere.radius = parsed.args[3];
+	sphere.color = rgb_to_int(new_color(parsed.args[4], parsed.args[5], parsed.args[6]));
+	if (parsed.size > 7)
+		sphere.is_reflective = parsed.args[7];
 	return (sphere);
 }
 

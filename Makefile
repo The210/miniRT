@@ -12,7 +12,6 @@
 
 SRCS		=	src/minirt.c\
 				src/setup_win.c\
-				src/sphere_ops.c\
 				src/vector_ops.c\
 				src/raytrace.c\
 				src/shadows.c\
@@ -23,9 +22,9 @@ SRCS		=	src/minirt.c\
 				src/parsing.c\
 				src/window.c\
 				src/stack.c\
-				src/normal_vect.c\
 
-
+SRCS		+=	src/figures/plane_ops.c\
+				src/figures/sphere_ops.c
 
 MKDIR_P		=	mkdir -p
 RM			=	rm -f
@@ -67,7 +66,7 @@ RESET		=	\033[0m
 # **************************************************************************** #
 CFLAGS		=	-Wall -Wextra -Werror
 
-CC			=	gcc
+CC			=	clang
 
 
 all:			${NAME}

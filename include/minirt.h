@@ -17,10 +17,11 @@
 # define SKY_COLOR 0x63bbf2
 # define FOV_H M_PI / 2
 # define FOV_W M_PI / 2
-# define CREATE_ARGS float x, float y, float z, float radius, int color, float is_reflective
 # define MAX_RECURSION_DEPTH 5
 # define SCREEN_GAMMA 2.2
 # define ZERO_FLOAT_PRECISION 0.0001
+# define MAX_PARSE_FIGURE_ARGUMENTS 20
+# define MAX_FIGURE_NAME_LENGTH 10
 
 
 typedef struct	s_point
@@ -93,16 +94,30 @@ typedef struct	s_polynome
 
 typedef struct	s_scene
 {
+	t_vect		resolution;
 	t_point		spotlight;
+	t_vect		light_color;
+	float		light_ratio;
+	t_vect		amb_light_color;
+	float		amb_light_ratio;
+	t_point		camera;
+	t_vect		cam_rotation;
+	float		fov;
 	t_figure	*figure_list;
 	int			figure_count;
 }	            t_scene;
 
+typedef struct	s_parse_args
+{
+	char	name[MAX_FIGURE_NAME_LENGTH];
+	float	args[MAX_PARSE_FIGURE_ARGUMENTS + 5];
+	int		size;
+}				t_parse_args;
+
 typedef struct	s_drawable
 {
 	char				*name;
-	t_figure			(*create)(CREATE_ARGS);
-	//create always has the max number of arguments, even if irrelevant
+	t_figure			(*create)(t_parse_args parsed);
 	struct s_drawable	*next;
 }				t_drawable;
 
@@ -136,8 +151,12 @@ typedef struct	s_drawable
 # endif
 
 void		init_win(void);
-t_sphere	create_sphere(float x, float y, float z, float radius, int color, float is_reflective);
+
+t_sphere	create_sphere(t_parse_args parsed);
+t_plane		create_plane(t_parse_args parsed);
+
 t_point		sphere_intersection(t_sphere sphere, t_vect ray, t_point start);
+t_point		plane_intersection(t_plane plane, t_vect ray, t_point start);
 float		norm(t_point vector);
 float		normsqrd(t_point vector);
 t_point		normalize(t_point vector);
@@ -156,6 +175,9 @@ t_vect		get_reflective_vector(t_sphere sphere, t_point inter, t_vect incident);
 
 t_vect		new_vect(float x, float y, float z);
 t_vect		true_vect(t_vect v1, t_vect v2);
+
+t_color		new_color(int r, int g, int b);
+t_fcolor	new_fcolor(int r, int g, int b);
 t_color		int_to_rgb(int color_int);
 t_fcolor	int_to_fcolor(int color_int);
 int			fcolor_to_int(t_fcolor color);
@@ -163,10 +185,11 @@ int			rgb_to_int(t_color color);
 t_color		rgb_color_intensity(t_color, float intensity);
 t_color		color_intensity(int color, float intensity);
 int			weighted_average(t_color base, t_color reflected, float weight1);
+
 void		clean_exit(int status, char *msg);
 t_scene		parse_scene(char *scene_file_path, t_drawable *drawable_list);
 float		ft_atof(char *nb);
-void		add_drawable(t_drawable **drawables, char *name, t_figure (*create_func)(CREATE_ARGS));
+void		add_drawable(t_drawable **drawables, char *name, t_figure (*create_func)(t_parse_args parsed));
 int			trace_ray(t_vect ray, t_scene scene, t_point start, int	prev_index, int ignore, t_r_stack stack);
 double		angle(t_vect v1, t_vect v2);
 

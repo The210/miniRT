@@ -12,6 +12,26 @@
 
 #include "minirt.h"
 
+t_color new_color(int r, int g, int b)
+{
+	t_color color;
+
+	color.red = r;	
+	color.green = g;
+	color.blue = b;
+	return (color);
+}
+
+t_fcolor new_fcolor(int r, int g, int b)
+{
+	t_fcolor fcolor;
+
+	fcolor.red = r;	
+	fcolor.green = g;
+	fcolor.blue = b;
+	return (fcolor);
+}
+
 t_color	int_to_rgb(int color_int)
 {
 	t_color rgb;
