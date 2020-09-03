@@ -75,10 +75,12 @@ typedef struct	s_figure
 	float		z;
 	t_material	material;
 	t_point		center;
+	t_vect      normal;
 	t_box		box;
 }				t_figure;
 
 typedef t_figure	t_sphere;
+typedef t_figure	t_plane;
 
 typedef struct	s_polynome
 {

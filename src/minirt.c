@@ -31,6 +31,7 @@ int		main(int argc, char **argv)
 	init_win();
 	drawables = NULL;
 	add_drawable(&drawables, "Sphere", create_sphere);
+	add_drawable(&drawables, "Plane", create_plane);
 	scene = parse_scene(argv[1], drawables);
 	start.x = 0;
 	start.y = 0;
