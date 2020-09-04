@@ -19,6 +19,8 @@ char*		check_sphere_args(t_parse_args parsed)
 	ft_memcpy(args, parsed.args, parsed.size * sizeof(float));
 	if (parsed.size < 7 )
 		return ("Not enough arguments for a sphere.");
+	if (args[3] < 0)
+		return ("Sphere radius is negative");
 	if (args[4] > 255 || args[5] > 255 || args[6] > 255 ||
 		args[4] < 0   || args[5] < 0   || args[6] < 0)
 		return ("Invalid RGB color values for sphere (must be values between 0 and 255 per color).");
@@ -41,6 +43,10 @@ t_sphere	create_sphere(t_parse_args parsed)
 	sphere.color = rgb_to_int(new_color(parsed.args[4], parsed.args[5], parsed.args[6]));
 	if (parsed.size > 7)
 		sphere.is_reflective = parsed.args[7];
+	sphere.intersection = sphere_intersection;
+	sphere.get_normal_at = get_sphere_normal_vector;
+	sphere.eclipses = sphere_eclipses_light;
+	ft_memcpy(sphere.name, parsed.name, sizeof(char) * ft_strlen(parsed.name));
 	return (sphere);
 }
 
@@ -90,4 +96,21 @@ t_vect  get_sphere_normal_vector(t_vect inter, t_figure sphere)
 
     normal = scale(true_vect(sphere.center, inter), 1.0 / sphere.radius);
     return (normal);
+}
+
+int		sphere_eclipses_light(t_point intersection, t_sphere sphere, t_point spot)
+{
+	t_vect	intersection_to_spot;
+
+	if (sphere.is_reflective)
+		return (0);
+	intersection_to_spot = normalize(vector(intersection, spot));
+	intersection_to_spot = scale(intersection_to_spot, distance(intersection, sphere.center));
+	intersection_to_spot = add(intersection, intersection_to_spot);
+	if (distance(intersection_to_spot, sphere.center) < sphere.radius)
+	{
+		if (distance(intersection, spot) > distance(intersection, sphere.center))
+			return (1);
+	}
+	return (0);
 }

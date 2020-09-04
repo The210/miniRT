@@ -14,10 +14,10 @@
 # define WIN_WIDTH 1000
 # define RENDER_DISTANCE 100000000
 # define AMBIENCE_LIGHTING 0.03
-# define SKY_COLOR 0x63bbf2
+# define SKY_COLOR 0x000000
 # define FOV_H M_PI / 2
 # define FOV_W M_PI / 2
-# define MAX_RECURSION_DEPTH 5
+# define MAX_RECURSION_DEPTH 50
 # define SCREEN_GAMMA 2.2
 # define ZERO_FLOAT_PRECISION 0.0001
 # define MAX_PARSE_FIGURE_ARGUMENTS 20
@@ -74,10 +74,14 @@ typedef struct	s_figure
 	float		x;
 	float		y;
 	float		z;
+	char		name[MAX_FIGURE_NAME_LENGTH];
 	t_material	material;
 	t_point		center;
 	t_vect      normal;
 	t_box		box;
+	t_vect		(*intersection)(struct s_figure self, t_vect ray, t_point start);
+	t_vect		(*get_normal_at)(t_vect inter, struct s_figure self);
+	int			(*eclipses)(t_point intersection, struct s_figure self, t_point light);
 }				t_figure;
 
 typedef t_figure	t_sphere;
@@ -157,6 +161,13 @@ t_plane		create_plane(t_parse_args parsed);
 
 t_point		sphere_intersection(t_sphere sphere, t_vect ray, t_point start);
 t_point		plane_intersection(t_plane plane, t_vect ray, t_point start);
+
+t_vect 		get_sphere_normal_vector(t_vect inter, t_figure sphere);
+t_vect		get_plane_normal_vector(t_vect inter, t_figure plane);
+
+int			sphere_eclipses_light(t_point intersection, t_sphere, t_point spot);
+int			plane_eclipses_light(t_point intersection, t_plane plane, t_point light);
+
 float		norm(t_point vector);
 float		normsqrd(t_point vector);
 t_point		normalize(t_point vector);
@@ -168,7 +179,6 @@ float		dot(t_point v1, t_point v2);
 float		distance(t_point p1, t_point p2);
 void		render_frame(t_vect **ray_table, t_scene scene, t_point start, t_r_stack stack);
 t_vect		**init_tracer();
-int			sphere_eclipses_light(t_point intersection, t_sphere, t_point spot);
 t_vect		scale(t_vect v, float scalar);
 
 t_vect		get_reflective_vector(t_sphere sphere, t_point inter, t_vect incident);

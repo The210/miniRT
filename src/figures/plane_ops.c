@@ -47,6 +47,10 @@ t_plane	create_plane(t_parse_args parsed)
 	plane.color = rgb_to_int(new_color(parsed.args[6], parsed.args[7], parsed.args[8]));
 	if (parsed.size > 9)
 		plane.is_reflective = parsed.args[9];
+	plane.intersection = plane_intersection;
+	plane.get_normal_at = get_plane_normal_vector;
+	plane.eclipses = plane_eclipses_light;
+	ft_memcpy(plane.name, parsed.name, sizeof(char) * ft_strlen(parsed.name));
 	return (plane);
 }
 
@@ -60,18 +64,36 @@ t_point		plane_intersection(t_plane plane, t_vect ray, t_point start)
 	result.z = RENDER_DISTANCE;
 	if (dot(plane.normal, ray) == 0)
         return (result);
-    r1 = (- dot(plane.center, plane.normal) - dot(plane.normal, start)) / dot(plane.normal, ray);
-    if (r1 >= 0)
+    r1 = (dot(plane.center, plane.normal) - dot(plane.normal, start)) / dot(plane.normal, ray);
+    if (r1 <= 0)
         return (result);
     result.x = r1 * ray.x + start.x;
     result.y = r1 * ray.y + start.y;
     result.z = r1 * ray.z + start.z;
     return (result);
 }
-    
+
+int			get_plane_side(t_point point, t_plane plane)
+{
+	float dist;
+	float norm_point_dist;
+	t_vect norm_point;
+
+	dist = distance(plane.center, point);
+	norm_point = add(plane.center, plane.normal);
+	norm_point_dist = distance(norm_point, point);
+	return (dist < norm_point_dist ? -1 : 1);
+}
 
 t_vect      get_plane_normal_vector(t_vect inter, t_figure plane)
 {
 	(void)inter;
     return (plane.normal);
+	//should return the opposed vector if coming from the other side
 }
+
+int			plane_eclipses_light(t_point intersection, t_plane plane, t_point light)
+{
+	return (get_plane_side(intersection, plane) != get_plane_side(light, plane));
+}
+

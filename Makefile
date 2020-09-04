@@ -14,7 +14,6 @@ SRCS		=	src/minirt.c\
 				src/setup_win.c\
 				src/vector_ops.c\
 				src/raytrace.c\
-				src/shadows.c\
 				src/reflection.c\
 				src/color_ops.c\
 				src/ft_atof.c\

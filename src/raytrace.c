@@ -64,15 +64,24 @@ int		color_shade(float intensity, t_figure figure, int reflective_color)
 
 }
 
-float	lum_intensity_sphere(t_sphere sphere, t_point ray, t_point spotlight)
+void print_vect(t_vect vect, char *str)
 {
-	t_point	sphere_ray;
-	t_point	ray_spot;
+	printf("%s - x:%f, y:%f, z:%f\n", str, vect.x, vect.y, vect.z);
+}
+
+float	get_lum_intensity(t_figure figure, t_point inter, t_point spotlight)
+{
+	t_point	normal;
+	t_point	ray_to_light;
 	float	result;
 
-	sphere_ray = vector(sphere.center, ray);
-	ray_spot = vector(ray, spotlight);
-	if ((result = dot(sphere_ray, ray_spot)) > 0)
+	normal = figure.get_normal_at(inter, figure);
+	ray_to_light = vector(inter, spotlight);
+	if (ft_strncmp(figure.name, "pl", 2) == 0)
+	{
+		return fabs(dot(normal, ray_to_light));
+	}
+	if ((result = dot(normal, ray_to_light)) > 0)
 		return (result);
 	return (0);
 }
@@ -103,7 +112,8 @@ int		trace_ray(t_vect ray, t_scene scene, t_point start, int prev_index, int ign
 	{
 		if (i == prev_index && ignore)
 			continue;
-		intersection = sphere_intersection(scene.figure_list[i], ray, start);
+		
+		intersection = scene.figure_list[i].intersection(scene.figure_list[i], ray, start);
 		if ((distance = norm(intersection)) < closest_distance)
 		{
 			index = i;
@@ -119,13 +129,13 @@ int		trace_ray(t_vect ray, t_scene scene, t_point start, int prev_index, int ign
 			modified_start = add(closest_intersection, scale(reflected_dir, EPSILON)); 
 			reflective_color = trace_ray(reflected_dir, scene, modified_start, index, 0, stack);
 		}
-		lum_intensity = lum_intensity_sphere(scene.figure_list[index], closest_intersection, scene.spotlight);
+		lum_intensity = get_lum_intensity(scene.figure_list[index], closest_intersection, scene.spotlight);
 		i = -1;
 		while (++i < scene.figure_count)
 		{
 			if (i == index)
 				continue;
-			if (sphere_eclipses_light(closest_intersection, scene.figure_list[i], scene.spotlight))
+			if (scene.figure_list[i].eclipses(closest_intersection, scene.figure_list[i], scene.spotlight))
 			{
 				lum_intensity = AMBIENCE_LIGHTING;
 				break;
