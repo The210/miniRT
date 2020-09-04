@@ -16,7 +16,7 @@ char*	check_plane_args(t_parse_args parsed)
 {
 	float args[MAX_PARSE_FIGURE_ARGUMENTS];
 
-	ft_memmove(args, parsed.args, parsed.size);
+	ft_memcpy(args, parsed.args, parsed.size * sizeof(float));
 	if (parsed.size < 9 )
 		return ("Not enough arguments for a plane.");
 	if (args[3] > 1  || args[4] > 1  || args[5] > 1 ||

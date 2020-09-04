@@ -55,7 +55,9 @@ void	add_drawable(t_drawable **drawables, char *name, t_figure (*create_func)(t_
 		return ;
 	}
 	while (head->next)
+	{
 		head = head->next;
+	}
 	head->next = new;
 }
 
@@ -70,8 +72,10 @@ int		tab_del_return(char **tab, int ret)
 
     tmp = tab;
     while (*tab)
+	{
         free(*tab++);
-    free(tmp);
+	}
+	free(tmp);
     return (ret);
 }
 
@@ -81,7 +85,7 @@ int		is_valid_figure(char *raw_line, t_drawable *drawables)
 
     if (!(line = ft_split_charset(raw_line, "\f\t\n\r\v ")))
         clean_exit(1, "Malloc failed");
-    if (line[0][0] == '\0' || ft_indexof(line[0][0], "#RAcl") != -1)
+    if (!line[0] || ft_indexof(line[0][0], "#RAcl") != -1)
         return (0);
     while(drawables)
     {
@@ -120,7 +124,7 @@ t_scene check_light(t_scene scene, t_parse_args parsed)
 {
 	float args[MAX_PARSE_FIGURE_ARGUMENTS];
 
-	ft_memmove(args, parsed.args, parsed.size);
+	ft_memcpy(args, parsed.args, parsed.size * sizeof(float));
 	if (parsed.size != 7)
 		clean_exit(0, "Wrong number of arguments for light source.");
 	if (args[3] > 1 || args[3] < -1)
@@ -138,7 +142,7 @@ t_scene check_amb_light(t_scene scene, t_parse_args parsed)
 {
 	float args[MAX_PARSE_FIGURE_ARGUMENTS];
 
-	ft_memmove(args, parsed.args, parsed.size);
+	ft_memcpy(args, parsed.args, parsed.size * sizeof(float));
 	if (parsed.size != 4)
 		clean_exit(0, "Wrong number of arguments for Ambient light.");
 	if (args[0] < 0 || args[0] > 1)
@@ -155,7 +159,7 @@ t_scene	check_camera(t_scene scene, t_parse_args parsed)
 {
 	float args[MAX_PARSE_FIGURE_ARGUMENTS];
 
-	ft_memmove(args, parsed.args, parsed.size);
+	ft_memcpy(args, parsed.args, parsed.size * sizeof(float));
 	if (parsed.size != 7)
 		clean_exit(0, "Wrong number of arguments for camera.");
 	if (args[3] > 1  || args[4] > 1  || args[5] > 1 ||
@@ -173,7 +177,7 @@ t_scene check_resolution(t_scene scene, t_parse_args parsed)
 {   
 	float args[MAX_PARSE_FIGURE_ARGUMENTS];
 
-	ft_memmove(args, parsed.args, parsed.size);
+	ft_memcpy(args, parsed.args, parsed.size * sizeof(float));
 	if (parsed.size != 2)
 		clean_exit(0, "Wrong number of arguments for resolution.");
 	if (args[0] < 0 || args[1] < 0)
@@ -186,7 +190,7 @@ static t_scene parse_switch(t_scene scene, t_parse_args parsed, t_drawable *draw
 {
 	t_figure	figure;
 	static int	i = 0;
-
+		
 	if (name_cmp(parsed.name, "R") == 0)
 		scene = check_resolution(scene, parsed);
 	else if (name_cmp(parsed.name, "A") == 0)
@@ -205,6 +209,7 @@ static t_scene parse_switch(t_scene scene, t_parse_args parsed, t_drawable *draw
 				scene.figure_list[i] = figure;
 				i++;
 			}
+			drawables = drawables->next;
 		}
 	}
 	return (scene);
@@ -216,17 +221,19 @@ static t_scene parse_line(t_scene scene, char *raw_line, t_drawable *drawables)
 	t_color			color;
 	long			nb;
 	char			**line;
+	char			**line_ptr;
 
-	if(!(line = ft_split_charset(raw_line, "\f\t\n\r\v ")))
+	if(!(line = ft_split_charset(raw_line, "\f\t\n\r\v ,")))
         clean_exit(1, "Failed to parse line (malloc wtf)");
-	if (line[0][0] == '\0' || line[0][0] == '#')
+	if (!line[0] || line[0][0] == '#')
 	{
 		tab_del_return(line, 0);
 		return (scene);
 	}
 	ft_strlcpy(parsed.name, line[0], MAX_FIGURE_NAME_LENGTH);
 	parsed.size = 0;
-	while (++line)
+	line_ptr = line;
+	while (*++line)
 	{
 		if (parsed.size > MAX_PARSE_FIGURE_ARGUMENTS)
 			clean_exit(0, "Too many arguments.");
@@ -243,7 +250,7 @@ static t_scene parse_line(t_scene scene, char *raw_line, t_drawable *drawables)
 			parsed.args[parsed.size] = ft_atof(*line);
 		parsed.size++;
 	}
-	tab_del_return(line, 0);
+	tab_del_return(line_ptr, 0);
 	return (parse_switch(scene, parsed, drawables));
 }
 

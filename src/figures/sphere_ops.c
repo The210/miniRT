@@ -16,7 +16,7 @@ char*		check_sphere_args(t_parse_args parsed)
 {
 	float args[MAX_PARSE_FIGURE_ARGUMENTS];
 
-	ft_memmove(args, parsed.args, parsed.size);
+	ft_memcpy(args, parsed.args, parsed.size * sizeof(float));
 	if (parsed.size < 7 )
 		return ("Not enough arguments for a sphere.");
 	if (args[4] > 255 || args[5] > 255 || args[6] > 255 ||
